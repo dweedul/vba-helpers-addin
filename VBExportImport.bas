@@ -13,11 +13,14 @@ Private Type ExportOptions
 End Type ' ExportOptions
 
 Private Const EXPORT_OPTION_TOKEN As String = "EXPORT_OPTION:"
-Private Const EXPORT_OPTION_SEPARATOR As String = ":"
 Private Const EXPORT_OPTION_ASSIGNMENT As String = "="
 Private Const EXPORT_OPTION_EXCLUDE_ME As String = "EXCLUDE_ME"
 Private Const EXPORT_OPTION_RELATIVE_PATH As String = "RELATIVE_PATH"
 Private Const EXPORT_OPTION_ABSOLUE_PATH As String = "ABSOLUTE_PATH"
+
+Public Sub ExportAllVBAToWorkingDirectory()
+  ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
+End Sub
 
 Public Sub OutputVBAModuleListToSelectedCell()
 ' '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -52,9 +55,6 @@ Public Function ListVBAModules(VBProject As Object) As Variant()
   ListVBAModules = out
 End Function
 
-Public Sub ExportAllVBAToWorkingDirectory()
-  ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
-End Sub
 
 Public Sub ImportAllVBAFromWorkingDirectory()
   Dim fso As Object, Folder As Object, f As Object
