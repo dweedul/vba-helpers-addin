@@ -25,6 +25,10 @@ Public Sub ExportAllVBAToWorkingDirectory()
   ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
 End Sub
 
+Public Sub ImportAllVBAFromWorkingDirectory()
+  ImportAllVBAFromFolder ThisWorkbook.Path, True
+End Sub
+
 Public Sub OutputVBAModuleListToSelectedCell()
 ' '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' Lists the modules in the active workbook's VBA project        '
@@ -58,13 +62,21 @@ Public Function ListVBAModules(VBProject As Object) As Variant()
   ListVBAModules = out
 End Function
 
-
-Public Sub ImportAllVBAFromWorkingDirectory()
-  Dim fso As Object, Folder As Object, f As Object
+Public Sub ImportAllVBAFromFolder(Path As String, _
+                                  Optional RecurseSubfolders As Boolean = False)
+  Dim fso As Object, Folder As Object, f As Object, fol As Object
   
   Set fso = CreateObject("Scripting.FileSystemObject")
+  Set Folder = fso.GetFolder(Path)
   
-  Set Folder = fso.GetFolder(ThisWorkbook.Path)
+  If RecurseSubfolders Then
+    For Each fol In Folder.SubFolders
+      If Left(Trim(fol.Name), 1) <> "." Then
+        ImportAllVBAFromFolder fol.Path, True
+      End If
+    Next ' fol
+  End If
+  
   For Each f In Folder.Files
     If IsValidFileExtension(FileName:=f.Name) Then
       'MsgBox f.Path & vbCrLf & f.Type
@@ -111,8 +123,8 @@ Public Sub ExportList(Workbook As Workbook, _
 End Sub
 
 Private Function ExportVBComponent(vbcomp As Object, _
-                FolderName As String, _
-                Optional FileName As String, _
+                ByVal FolderName As String, _
+                Optional ByVal FileName As String, _
                 Optional OverwriteExisting As Boolean = True) As Boolean
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' This function exports the code module of a VBComponent to a text
