@@ -328,7 +328,7 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
       ' Process all non-blank comment lines
       If Len(tmp) > 1 Then
         ' Exit early once the comments are finished
-        If Left(tmp, 1) <> "'" Then Exit For
+        If Left(LTrim(tmp), 1) <> "'" Then Exit For
         
         ' find the position of the separators used
         sep_pos = InStr(2, tmp, EXPORT_OPTION_TOKEN, vbTextCompare) + Len(EXPORT_OPTION_TOKEN)
