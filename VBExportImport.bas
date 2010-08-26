@@ -1,22 +1,24 @@
 Attribute VB_Name = "VBExportImport"
-' EXPORT_OPTION: EXCLUDE_ME
+' _OPTION: EXCLUDE_ME
 
 Option Explicit
 
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' This UDT will hold the options that govern Export behavior '
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Private Type ExportOptions
-  ExcludeMe As Boolean
+Private Type ImportExportOptions
+  NoExport As Boolean
+  NoRefresh As Boolean
   AbsolutePath As String
   RelativePath As String
-End Type ' ExportOptions
+End Type ' ImportExportOptions
 
-Private Const EXPORT_OPTION_TOKEN As String = "EXPORT_OPTION:"
+Private Const OPTIONS_TOKEN As String = "_OPTION:"
 Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
-Private Const EXPORT_OPTION_EXCLUDE_ME As String = "EXCLUDE_ME"
-Private Const EXPORT_OPTION_RELATIVE_PATH As String = "RELATIVE_PATH"
-Private Const EXPORT_OPTION_ABSOLUE_PATH As String = "ABSOLUTE_PATH"
+Private Const OPTION_NO_EXPORT As String = "EXCLUDE_ME"
+Private Const OPTION_RELATIVE_PATH As String = "RELATIVE_PATH"
+Private Const OPTION_ABSOLUTE_PATH As String = "ABSOLUTE_PATH"
+Private Const OPTION_NO_REFRESH As String = "NO_REFRESH"
 
 Public Sub ExportAllVBAToWorkingDirectory()
   ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
@@ -117,7 +119,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
 ' a file with the same name as the VBComponent followed by the
 ' appropriate extension.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-  Dim Extension As String, FName As String ', Options As ExportOptions
+  Dim Extension As String, FName As String ', Options As ImportExportOptions
   
   ' Don't export empty modules, it is stupid '
   If vbcomp.CodeModule.CountOfLines = 0 Then Exit Function
@@ -128,7 +130,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
   With ParseOptions(vbcomp)
     
     ' exit early on excluded option '
-    If .ExcludeMe Then
+    If .NoExport Then
       ExportVBComponent = False
       Exit Function
     End If
@@ -292,7 +294,7 @@ Private Function IsValidFileExtension(FileName As String) As String
 End Function
 
 
-Private Function ParseOptions(vbcomp As Object) As ExportOptions
+Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 ' Reads through any comments at the top of the code module '
 ' then parses the options out of the comments.             '
@@ -301,7 +303,7 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
   Dim i As Long, tmp As String
   Dim equal_pos As Long, sep_pos As Long
   Dim var As String, val As String
-  Dim opt As ExportOptions
+  Dim opt As ImportExportOptions
   
   Const comment_string As String = "'"
   
@@ -311,8 +313,9 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
   '''''''''''''''''''''''''''''''''''''''''''
   With opt
     .AbsolutePath = vbNullString
-    .ExcludeMe = False
+    .NoExport = False
     .RelativePath = vbNullString
+    .NoRefresh = False
   End With ' opt
   
   ParseOptions = opt
@@ -331,7 +334,7 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
         If Left(LTrim(tmp), 1) <> "'" Then Exit For
         
         ' find the position of the separators used
-        sep_pos = InStr(2, tmp, EXPORT_OPTION_TOKEN, vbTextCompare) + Len(EXPORT_OPTION_TOKEN)
+        sep_pos = InStr(2, tmp, OPTIONS_TOKEN, vbTextCompare) + Len(OPTIONS_TOKEN)
         equal_pos = InStr(2, tmp, OPTIONS_ASSIGNMENT_TOKEN, vbTextCompare)
         
         ' get the options and arguments
@@ -348,12 +351,14 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
         
         ' save the variables into the UDT
         Select Case UCase(var)
-          Case EXPORT_OPTION_EXCLUDE_ME:
-            opt.ExcludeMe = True
-          Case EXPORT_OPTION_RELATIVE_PATH:
+          Case OPTION_NO_EXPORT:
+            opt.NoExport = True
+          Case OPTION_RELATIVE_PATH:
             opt.RelativePath = val
-          Case EXPORT_OPTION_ABSOLUE_PATH:
+          Case OPTION_ABSOLUTE_PATH:
             opt.AbsolutePath = val
+          Case OPTION_NO_REFRESH:
+            opt.NoRefresh = True
         End Select ' var
       End If
     Next ' i
