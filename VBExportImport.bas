@@ -46,10 +46,10 @@ Public Sub OutputVBAModuleListToSelectedCell()
 End Sub
 
 Public Function ListVBAModules(VBProject As Object) As Variant()
-''''''''''''''''''''''''''''''''''''''''''
-' Returns an array of module names       '
-' from the current workbooks VBA project '
-''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''
+' Returns an array of module names        '
+' from the current workbook's VBA project '
+'''''''''''''''''''''''''''''''''''''''''''
   Dim out() As Variant, i As Long
   
   With VBProject.VBComponents
