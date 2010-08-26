@@ -13,7 +13,7 @@ Private Type ExportOptions
 End Type ' ExportOptions
 
 Private Const EXPORT_OPTION_TOKEN As String = "EXPORT_OPTION:"
-Private Const EXPORT_OPTION_ASSIGNMENT As String = "="
+Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
 Private Const EXPORT_OPTION_EXCLUDE_ME As String = "EXCLUDE_ME"
 Private Const EXPORT_OPTION_RELATIVE_PATH As String = "RELATIVE_PATH"
 Private Const EXPORT_OPTION_ABSOLUE_PATH As String = "ABSOLUTE_PATH"
@@ -332,7 +332,7 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
         
         ' find the position of the separators used
         sep_pos = InStr(2, tmp, EXPORT_OPTION_TOKEN, vbTextCompare) + Len(EXPORT_OPTION_TOKEN)
-        equal_pos = InStr(2, tmp, EXPORT_OPTION_ASSIGNMENT, vbTextCompare)
+        equal_pos = InStr(2, tmp, OPTIONS_ASSIGNMENT_TOKEN, vbTextCompare)
         
         ' get the options and arguments
         If equal_pos < 1 Then
