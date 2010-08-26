@@ -12,7 +12,7 @@ Private Type ExportOptions
   RelativePath As String
 End Type ' ExportOptions
 
-Private Const EXPORT_OPTION_TOKEN As String = "EXPORT_OPTION"
+Private Const EXPORT_OPTION_TOKEN As String = "EXPORT_OPTION:"
 Private Const EXPORT_OPTION_SEPARATOR As String = ":"
 Private Const EXPORT_OPTION_ASSIGNMENT As String = "="
 Private Const EXPORT_OPTION_EXCLUDE_ME As String = "EXCLUDE_ME"
@@ -35,7 +35,7 @@ Public Sub OutputVBAModuleListToSelectedCell()
   c.Value = WorksheetFunction.Transpose(list)
 End Sub
 
-Public Function ListVBAModules(VBProject as object) As Variant()
+Public Function ListVBAModules(VBProject As Object) As Variant()
 ''''''''''''''''''''''''''''''''''''''''''
 ' Returns an array of module names       '
 ' from the current workbooks VBA project '
@@ -117,24 +117,42 @@ Private Function ExportVBComponent(vbcomp As Object, _
 ' a file with the same name as the VBComponent followed by the
 ' appropriate extension.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-  Dim Extension As String, FName As String, Options As ExportOptions
+  Dim Extension As String, FName As String ', Options As ExportOptions
   
-  Options = ParseOptions(vbcomp)
+  ' Don't export empty modules, it is stupid '
+  If vbcomp.CodeModule.CountOfLines = 0 Then Exit Function
   
-  ' exit early on excluded option
-  If Options.ExcludeMe Then
-    ExportVBComponent = False
-    Exit Function
-  End If
+  ''''''''''''''''''''''''''''''''''''
+  ' Handle options within the module '
+  ''''''''''''''''''''''''''''''''''''
+  With ParseOptions(vbcomp)
+    
+    ' exit early on excluded option '
+    If .ExcludeMe Then
+      ExportVBComponent = False
+      Exit Function
+    End If
+    
+    ' add a relative path if provided
+    If .RelativePath <> vbNullString Then
+      FolderName = FolderName & "\" & .RelativePath
+    End If
+  
+  End With
   
   Extension = GetFileExtension(vbcomp:=vbcomp)
-  If Trim(FileName) = vbNullString Then
+  If Trim(FileName) = vbNullString Then ' filename != blank
     FName = vbcomp.Name & Extension
   Else
     FName = FileName
-    If InStr(1, FName, ".", vbBinaryCompare) = 0 Then
+    If InStr(1, FName, ".", vbBinaryCompare) = 0 Then ' filename doesn't have an extension
         FName = FName & Extension
     End If
+  End If
+  
+  ' create the directory if it doesn't exist
+  If Dir(FolderName, vbDirectory) = vbNullString Then
+    MkDir FolderName
   End If
   
   If StrComp(Right(FolderName, 1), "\", vbBinaryCompare) = 0 Then
@@ -287,14 +305,17 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
   
   Const comment_string As String = "'"
   
-  ''''''''''''''''''''''''''''''''''''''''
-  ' initialize options to default values '
-  ''''''''''''''''''''''''''''''''''''''''
+  '''''''''''''''''''''''''''''''''''''''''''
+  ' initialize options to default values    '
+  ' and prepare for an early exit if needed '
+  '''''''''''''''''''''''''''''''''''''''''''
   With opt
     .AbsolutePath = vbNullString
     .ExcludeMe = False
     .RelativePath = vbNullString
   End With ' opt
+  
+  ParseOptions = opt
   
   With vbcomp.CodeModule
     '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -310,8 +331,8 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
         If Left(tmp, 1) <> "'" Then Exit For
         
         ' find the position of the separators used
-        sep_pos = InStr(2, tmp, EXPORT_OPTION_SEPARATOR)
-        equal_pos = InStr(2, tmp, EXPORT_OPTION_ASSIGNMENT)
+        sep_pos = InStr(2, tmp, EXPORT_OPTION_TOKEN, vbTextCompare) + Len(EXPORT_OPTION_TOKEN)
+        equal_pos = InStr(2, tmp, EXPORT_OPTION_ASSIGNMENT, vbTextCompare)
         
         ' get the options and arguments
         If equal_pos < 1 Then
@@ -326,7 +347,7 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
         End If
         
         ' save the variables into the UDT
-        Select Case var
+        Select Case UCase(var)
           Case EXPORT_OPTION_EXCLUDE_ME:
             opt.ExcludeMe = True
           Case EXPORT_OPTION_RELATIVE_PATH:
@@ -337,8 +358,6 @@ Private Function ParseOptions(vbcomp As Object) As ExportOptions
       End If
     Next ' i
   End With ' vbcomp.CodeModule
-  
-  Debug.Print i
   
   ParseOptions = opt
 End Function
