@@ -1,5 +1,6 @@
 Attribute VB_Name = "VBExportImport"
 ' _OPTION: EXCLUDE_ME
+' _OPTION: NO_REFRESH
 
 Option Explicit
 
@@ -187,7 +188,7 @@ Private Function ImportVBComponent(VBProject As Object, _
 ' a module with the same name as the filename without the extension
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
   Dim vbcomp As Object, TempVBComp As Object, s As String
-  Dim SlashPos As Long, ExtPos As Long
+  Dim SlashPos As Long, ExtPos As Long, opt As ImportExportOptions
   
   On Error Resume Next
   
@@ -196,6 +197,24 @@ Private Function ImportVBComponent(VBProject As Object, _
     SlashPos = InStrRev(FileName, "\")
     ExtPos = InStrRev(FileName, ".")
     ModuleName = Mid(FileName, SlashPos + 1, ExtPos - SlashPos - 1)
+  End If
+  
+  '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+  ' check if module exists, then check the import options '
+  '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+  Set vbcomp = Nothing
+  Set vbcomp = VBProject.VBComponents(ModuleName)
+  
+  If Not vbcomp Is Nothing Then
+    With ParseOptions(vbcomp)
+      
+      ' exit early on NoRefresh
+      If .NoRefresh Then
+        ImportVBComponent = False
+        Exit Function
+      End If
+      
+    End With ' ParseOptions(vbcomp)
   End If
   
   If OverwriteExisting = True Then
@@ -240,7 +259,7 @@ Private Function ImportVBComponent(VBProject As Object, _
   If vbcomp Is Nothing Then
     VBProject.VBComponents.Import FileName:=FileName
   Else
-    If vbcomp.Type = vbext_ct_Document Then
+    If vbcomp.Type = 100 Then ' 100 = vbext_ct_Document
       ' VBComp is destination module
       Set TempVBComp = VBProject.VBComponents.Import(FileName)
       ' TempVBComp is source module
