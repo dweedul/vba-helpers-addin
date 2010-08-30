@@ -1,6 +1,6 @@
 Attribute VB_Name = "VBExportImport"
-' _OPTION: EXCLUDE_ME
-' _OPTION: NO_REFRESH
+' #NoExport
+' #NoRefresh
 
 Option Explicit
 
@@ -14,12 +14,12 @@ Private Type ImportExportOptions
   RelativePath As String
 End Type ' ImportExportOptions
 
-Private Const OPTIONS_TOKEN As String = "_OPTION:"
+Private Const OPTIONS_TOKEN As String = "#"
 Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
-Private Const OPTION_NO_EXPORT As String = "EXCLUDE_ME"
-Private Const OPTION_RELATIVE_PATH As String = "RELATIVE_PATH"
-Private Const OPTION_ABSOLUTE_PATH As String = "ABSOLUTE_PATH"
-Private Const OPTION_NO_REFRESH As String = "NO_REFRESH"
+Private Const OPTION_NO_EXPORT As String = "NoExport"
+Private Const OPTION_RELATIVE_PATH As String = "RelativePath"
+Private Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' NYI
+Private Const OPTION_NO_REFRESH As String = "NoRefresh"
 
 Public Sub ExportAllVBAToWorkingDirectory()
   ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
