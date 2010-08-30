@@ -332,7 +332,7 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
 ' Returns a type UDT with the options ready for use        '
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
   Dim i As Long, tmp As String
-  Dim equal_pos As Long, sep_pos As Long
+  Dim equal_pos As Long, sep_pos As Long, off As Long
   Dim var As String, val As String
   Dim opt As ImportExportOptions
   
@@ -365,8 +365,13 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
         If Left(LTrim(tmp), 1) <> "'" Then Exit For
         
         ' find the position of the separators used
-        sep_pos = InStr(2, tmp, OPTIONS_TOKEN, vbTextCompare) + Len(OPTIONS_TOKEN)
-        equal_pos = InStr(2, tmp, OPTIONS_ASSIGNMENT_TOKEN, vbTextCompare)
+        off = 0
+        If Len(OPTIONS_TOKEN) > 1 Then off = Len(OPTIONS_TOKEN)
+        sep_pos = InStr(2, tmp, OPTIONS_TOKEN, vbTextCompare) + off
+        
+        off = 0
+        If Len(OPTIONS_ASSIGNMENT_TOKEN) > 1 Then off = Len(OPTIONS_ASSIGNMENT_TOKEN)
+        equal_pos = InStr(2, tmp, OPTIONS_ASSIGNMENT_TOKEN, vbTextCompare) + off
         
         ' get the options and arguments
         If equal_pos < 1 Then
@@ -381,14 +386,14 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
         End If
         
         ' save the variables into the UDT
-        Select Case UCase(var)
-          Case OPTION_NO_EXPORT:
+        Select Case LCase(var)
+          Case LCase(OPTION_NO_EXPORT):
             opt.NoExport = True
-          Case OPTION_RELATIVE_PATH:
+          Case LCase(OPTION_RELATIVE_PATH):
             opt.RelativePath = val
-          Case OPTION_ABSOLUTE_PATH:
+          Case LCase(OPTION_ABSOLUTE_PATH):
             opt.AbsolutePath = val
-          Case OPTION_NO_REFRESH:
+          Case LCase(OPTION_NO_REFRESH):
             opt.NoRefresh = True
         End Select ' var
       End If
