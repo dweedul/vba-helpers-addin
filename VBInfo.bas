@@ -21,10 +21,13 @@ Private Const OPTIONS_TOKEN As String = "#"
 Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
 Private Const OPTION_NO_LIST As String = "NoList"
 
-Public Sub OutputVBAModuleListToSelectedCell()
+
+
+Private Sub OutputVBAModuleListToSelectedCell()
 '**************************************************************
 ' Lists the modules in the active workbook's VBA project
 ' to a group of cells starting with the curently selected cell.
+' Make public as needed.
 '**************************************************************
   Dim c As Range, list As Variant
   If TypeName(Selection) <> "Range" Then Exit Sub

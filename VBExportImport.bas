@@ -27,11 +27,13 @@ Private Const OPTION_RELATIVE_PATH As String = "RelativePath"
 Private Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
 Private Const OPTION_NO_REFRESH As String = "NoRefresh"
 
-Public Sub ExportAllVBAToWorkingDirectory()
+
+
+Private Sub ExportAllVBAToWorkingDirectory()
   ExportAllVBA Workbook:=ThisWorkbook, FolderName:=ThisWorkbook.Path
 End Sub
 
-Public Sub ImportAllVBAFromWorkingDirectory()
+Private Sub ImportAllVBAFromWorkingDirectory()
   ImportAllVBAFromFolder ThisWorkbook.Path, True
 End Sub
 
