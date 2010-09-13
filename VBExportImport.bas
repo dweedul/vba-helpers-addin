@@ -21,7 +21,7 @@ Private Const OPTIONS_TOKEN As String = "#"
 Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
 Private Const OPTION_NO_EXPORT As String = "NoExport"
 Private Const OPTION_RELATIVE_PATH As String = "RelativePath"
-Private Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' NYI
+Private Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
 Private Const OPTION_NO_REFRESH As String = "NoRefresh"
 
 Public Sub ExportAllVBAToWorkingDirectory()
@@ -31,39 +31,6 @@ End Sub
 Public Sub ImportAllVBAFromWorkingDirectory()
   ImportAllVBAFromFolder ThisWorkbook.Path, True
 End Sub
-
-Public Sub OutputVBAModuleListToSelectedCell()
-'**************************************************************
-' Lists the modules in the active workbook's VBA project
-' to a group of cells starting with the curently selected cell.
-'**************************************************************
-  Dim c As Range, list As Variant
-  If TypeName(Selection) <> "Range" Then Exit Sub
-  
-  Set c = Selection
-  list = ListVBAModules(ThisWorkbook.VBProject)
-  
-  Set c = c.Resize(UBound(list))
-  
-  c.Value = WorksheetFunction.Transpose(list)
-End Sub
-
-Public Function ListVBAModules(VBProject As Object) As Variant()
-'**************************************
-' Returns an array of module names from
-' the current workbook's VBA project
-'**************************************
-  Dim out() As Variant, i As Long
-  
-  With VBProject.VBComponents
-    ReDim out(1 To .Count)
-    For i = 1 To .Count
-      out(i) = .Item(i).Name
-    Next ' i
-  End With ' VBProject.VBComponents
-  
-  ListVBAModules = out
-End Function
 
 Public Sub ImportAllVBAFromFolder(Path As String, _
                                   Optional RecurseSubfolders As Boolean = False)
