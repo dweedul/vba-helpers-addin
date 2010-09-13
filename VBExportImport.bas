@@ -1,12 +1,15 @@
 Attribute VB_Name = "VBExportImport"
 ' #NoExport
 ' #NoRefresh
+' #NoList
 
 Option Explicit
 
-'***********************************************************
+'**************************************************************
 ' This UDT will hold the options that govern Export behavior
-'***********************************************************
+' Options must be in a comment and before any non-comment code.
+' The whole option line will be read and processed accordingly.
+'**************************************************************
 Private Type ImportExportOptions
   NoExport As Boolean
   NoRefresh As Boolean
@@ -14,9 +17,9 @@ Private Type ImportExportOptions
   RelativePath As String
 End Type ' ImportExportOptions
 
-'****************************************
-' These constants hold the option strings
-'****************************************
+'*****************************************
+' These constants hold the option strings.
+'*****************************************
 Private Const OPTIONS_TOKEN As String = "#"
 Private Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
 Private Const OPTION_NO_EXPORT As String = "NoExport"
@@ -32,6 +35,9 @@ Public Sub ImportAllVBAFromWorkingDirectory()
   ImportAllVBAFromFolder ThisWorkbook.Path, True
 End Sub
 
+'*******************************
+' Helper Functions for the Above
+'*******************************
 Public Sub ImportAllVBAFromFolder(Path As String, _
                                   Optional RecurseSubfolders As Boolean = False)
   Dim fso As Object, Folder As Object, f As Object, fol As Object
@@ -55,9 +61,6 @@ Public Sub ImportAllVBAFromFolder(Path As String, _
   Next ' f
 End Sub
 
-'*******************************
-' Helper Functions for the Above
-'*******************************
 Public Sub ExportAllVBA(Workbook As Workbook, _
                         FolderName As String)
   Dim vbcomp As Object
@@ -72,9 +75,7 @@ Public Sub ExportList(Workbook As Workbook, _
                         ModuleList As Variant)
   Dim m As Variant, m_list As Variant
   
-  '****************************
-  ' Find the type of ModuleList
-  '****************************
+  ' Find the type of ModuleList '
   If TypeName(ModuleList) = "String" Then
     m_list = Split(ModuleList)
   ElseIf TypeName(ModuleList) = "Range" Then
@@ -295,27 +296,21 @@ Private Function IsValidFileExtension(FileName As String) As String
 End Function
 
 Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
-'*****************************************************
+'*******************************************************
 ' Reads through any comments at the top of the code
-' module, then parses the options out of the comments.
+' module, then parses the options out of those comments.
 ' Returns a UDT with the options ready for use
-'*****************************************************
+'*******************************************************
   Dim i As Long, tmp As String
   Dim equal_pos As Long, sep_pos As Long, off As Long
-  Dim var As String, val As String
+  Dim Var As String, Val As String
   Dim opt As ImportExportOptions
   
   Const comment_string As String = "'"
   
   ' initialize options to default values
   ' and prepare for an early exit if needed
-  With opt
-    .AbsolutePath = vbNullString
-    .NoExport = False
-    .RelativePath = vbNullString
-    .NoRefresh = False
-  End With ' opt
-  
+  ProcessOption opt
   ParseOptions = opt
   
   With vbcomp.CodeModule
@@ -327,7 +322,7 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
       tmp = .Lines(i, 1)
  
       ' Process all non-blank comment lines
-      If Len(tmp) > 1 Then
+      If Len(Trim(tmp)) > 1 Then
         ' Exit early once the comments are finished
         If Left(LTrim(tmp), 1) <> "'" Then Exit For
         
@@ -343,26 +338,17 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
         ' get the options and arguments
         If equal_pos < 1 Then
           ' * single word options *
-          var = Trim(Mid(tmp, sep_pos + 1))
-          val = vbNullString
+          Var = Trim(Mid(tmp, sep_pos + 1))
+          Val = vbNullString
         Else
           ' * multi-word options *
           ' get the option and its value
-          var = Trim(Mid(tmp, sep_pos + 1, equal_pos - sep_pos - 1))
-          val = Trim(Mid(tmp, equal_pos + 1, Len(tmp) - equal_pos))
+          Var = Trim(Mid(tmp, sep_pos + 1, equal_pos - sep_pos - 1))
+          Val = Trim(Mid(tmp, equal_pos + 1, Len(tmp) - equal_pos))
         End If
         
         ' save the variables into the UDT
-        Select Case LCase(var)
-          Case LCase(OPTION_NO_EXPORT):
-            opt.NoExport = True
-          Case LCase(OPTION_RELATIVE_PATH):
-            opt.RelativePath = val
-          Case LCase(OPTION_ABSOLUTE_PATH):
-            opt.AbsolutePath = val
-          Case LCase(OPTION_NO_REFRESH):
-            opt.NoRefresh = True
-        End Select ' var
+        ProcessOption opt, Var, Val
       End If
     Next ' i
   End With ' vbcomp.CodeModule
@@ -370,4 +356,33 @@ Private Function ParseOptions(vbcomp As Object) As ImportExportOptions
   ParseOptions = opt
 End Function
 
+Private Sub ProcessOption( _
+             ByRef Options As ImportExportOptions, _
+             Optional Var As String = vbNullString, _
+             Optional Val As String = vbNullString)
+'* Modifies the Options object depending on what is provided.
+'* This function is meant to be changed when options change.
 
+  ' Initialize the settings if no inputs given
+  If Var = vbNullString Then
+    With Options
+      .AbsolutePath = vbNullString
+      .NoExport = False
+      .RelativePath = vbNullString
+      .NoRefresh = False
+    End With ' out
+    Exit Sub
+  End If
+  
+  ' Handle the inputs
+  Select Case LCase(Var)
+    Case LCase(OPTION_NO_EXPORT):
+      Options.NoExport = True
+    Case LCase(OPTION_RELATIVE_PATH):
+      Options.RelativePath = Val
+    Case LCase(OPTION_ABSOLUTE_PATH):
+      Options.AbsolutePath = Val
+    Case LCase(OPTION_NO_REFRESH):
+      Options.NoRefresh = True
+  End Select ' var
+End Sub
