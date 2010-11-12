@@ -5,3 +5,6 @@ _links
 # ignore certain excel filetypes
 *.frx
 *.xls*
+
+# ignore test files
+test*
