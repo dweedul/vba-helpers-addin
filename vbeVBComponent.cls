@@ -37,8 +37,24 @@ Public Property Let ProjectName(ProjectName As String): m_ProjectName = ProjectN
 Public Property Get ModuleName() As String: ModuleName = m_ModuleName: End Property
 Public Property Let ModuleName(ModuleName As String): m_ModuleName = ModuleName: End Property
 
+Public Property Get VBComponent() As Object
+  On Error GoTo Local_Error
+  Set VBComponent = Application.VBE.VBProjects(ProjectName).VBComponents(ModuleName)
+  
+  On Error GoTo 0
+  Exit Property
+  
+Local_Error:
+  Set VBComponent = Nothing
+End Property
+Public Property Let VBComponent(VBComponent As Object)
+  Me.ModuleName = VBComponent.Name
+  Me.ProjectName = VBComponent.Collection.Parent.Name
+End Property
+
+
 Public Property Get IsEmpty() As Boolean
-  If Workbooks(ProjectName).VBProject.VBComponents(ModuleName).CodeModule.CountOfLines < 1 Then
+  If Me.VBComponent.CodeModule.CountOfLines < 1 Then
     IsEmpty = True
   Else
     IsEmpty = False
@@ -79,19 +95,7 @@ End Sub
 '***************
 ' Public methods
 '***************
-Public Function LoadComponent( _
-                  VBComp As VBIDE.VBComponent, _
-                  Optional WorkbookName As String = vbNullString) As vbeVBComponent
-  Me.ModuleName = VBComp.Name
-  
-  If WorkbookName = vbNullString Then
-    Me.ProjectName = ActiveWorkbook.Name
-  Else
-    Me.ProjectName = VBComp.Collection.Parent.Name
-  End If
-  
-  Set LoadComponent = Me
-End Function
+
 
 '****************
 ' Private methods
@@ -106,7 +110,7 @@ Private Sub ParseCodeModule()
   
   Set opt = New udtOption
   
-  Set VBComp = Workbooks(ProjectName).VBProject.VBComponents(ModuleName)
+  Set VBComp = Me.VBComponent
   
   With VBComp.CodeModule
   ' Loop through the lines looking for options to process
