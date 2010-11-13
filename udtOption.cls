@@ -7,6 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
+
 '********************************************************
 ' Class for encapsulating the parts of the comment string
 '********************************************************
@@ -19,7 +21,11 @@ Private m_Value As Variant
 Public Property Get Variable() As String: Variable = m_Variable: End Property
 Public Property Let Variable(Variable As String): m_Variable = Variable: End Property
 
-Public Property Get Value() As Variant: Value = m_Value: End Property
+Public Property Get Value() As Variant
+Attribute Item.VB_UserMemId = 0
+' Default method of the class
+  Value = m_Value
+End Property
 Public Property Let Value(Value As Variant): m_Value = Value: End Property
 
 '***************
