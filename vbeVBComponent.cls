@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "dbCodeModule"
+Attribute VB_Name = "vbeVBComponent"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -22,7 +22,6 @@ Private m_Options As Collection
 Private m_Index As Long ' index in the collection
 Private m_ModuleName As String ' name of the Code Module
 Private m_ProjectName As String ' name of the Code Module
-Private m_IsEmpty As Boolean ' tells if the code module is empty
 
 Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked for options
 
@@ -77,12 +76,29 @@ Private Sub Class_Terminate()
   Set m_Options = Nothing
 End Sub
 
+'***************
+' Public methods
+'***************
+Public Function LoadComponent( _
+                  VBComp As VBIDE.VBComponent, _
+                  Optional WorkbookName As String = vbNullString) As vbeVBComponent
+  Me.ModuleName = VBComp.Name
+  
+  If WorkbookName = vbNullString Then
+    Me.ProjectName = ActiveWorkbook.Name
+  Else
+    Me.ProjectName = VBComp.Collection.Parent.Name
+  End If
+  
+  Set LoadComponent = Me
+End Function
+
 '****************
 ' Private methods
 '****************
 Private Sub ParseCodeModule()
   Dim i As Long
-  Dim vbcomp As Object
+  Dim VBComp As Object
   Dim opt As udtOption
   Dim tmp As String
   
@@ -90,9 +106,9 @@ Private Sub ParseCodeModule()
   
   Set opt = New udtOption
   
-  Set vbcomp = Workbooks(ProjectName).VBProject.VBComponents(ModuleName)
+  Set VBComp = Workbooks(ProjectName).VBProject.VBComponents(ModuleName)
   
-  With vbcomp.CodeModule
+  With VBComp.CodeModule
   ' Loop through the lines looking for options to process
 
     For i = 1 To .CountOfLines
