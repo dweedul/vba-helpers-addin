@@ -52,7 +52,6 @@ Public Property Let VBComponent(VBComponent As Object)
   Me.ProjectName = VBComponent.Collection.Parent.Name
 End Property
 
-
 Public Property Get IsEmpty() As Boolean
   If Me.VBComponent.CodeModule.CountOfLines < 1 Then
     IsEmpty = True
@@ -73,14 +72,10 @@ Public Property Get Options(Optional Key As Variant) As Variant
   ElseIf KeyExists(Key, Options) Then
   Else
     Set out = New udtOption
-    out.Variable = Key
-    out.Value = False
+    out.Variable = Key: out.Value = False
     Set Options = out
   End If
 End Property
-
-
-' @TODO(DB): Be sure to check that the key exists in the collection when asking for an option
 
 '***********************
 ' Constructor/Destructor
@@ -102,17 +97,12 @@ End Sub
 '****************
 Private Sub ParseCodeModule()
   Dim i As Long
-  Dim VBComp As Object
   Dim opt As udtOption
   Dim tmp As String
   
   If IsEmpty Then Exit Sub
   
-  Set opt = New udtOption
-  
-  Set VBComp = Me.VBComponent
-  
-  With VBComp.CodeModule
+  With Me.VBComponent.CodeModule
   ' Loop through the lines looking for options to process
 
     For i = 1 To .CountOfLines
@@ -125,63 +115,24 @@ Private Sub ParseCodeModule()
         If Not Left(LTrim(tmp), 1) Like COMMENT_TOKEN Then Exit For
         
         ' save the variables into the collection
-        ProcessOption ParseOptionLine(tmp)
+        Set opt = New udtOption
+        ProcessOption opt.Parse(tmp)
       End If
     Next ' i
-  End With ' vbcomp.CodeModule
+  End With ' Me.VBComponent.CodeModule
   
   m_Parsed = True
 End Sub
-
-Private Function ParseOptionLine(OptionLine As String) As udtOption
-  Dim equal_pos As Long, sep_pos As Long, off As Long
-  Dim var As String, val As String
-  Dim opt As udtOption ' output variable
-  
-  Set opt = New udtOption
-  
-  ' find the position of the separators used
-  off = 0
-  If Len(OPTIONS_TOKEN) > 1 Then off = Len(OPTIONS_TOKEN)
-  sep_pos = InStr(2, OptionLine, OPTIONS_TOKEN, vbTextCompare) + off
-  
-  off = 0
-  If Len(OPTIONS_ASSIGNMENT_TOKEN) > 1 Then off = Len(OPTIONS_ASSIGNMENT_TOKEN)
-  equal_pos = InStr(2, OptionLine, OPTIONS_ASSIGNMENT_TOKEN, vbTextCompare) + off
-  
-  ' get the options and arguments
-  If equal_pos < 1 Then
-    ' * single word options *
-    opt.Variable = Trim(Mid(OptionLine, sep_pos + 1))
-    opt.Value = vbNullString
-  Else
-    ' * multi-word options *
-    ' get the option and its value
-    opt.Variable = Trim(Mid(OptionLine, sep_pos + 1, equal_pos - sep_pos - 1))
-    opt.Value = Trim(Mid(OptionLine, equal_pos + 1, Len(OptionLine) - equal_pos))
-  End If
-  
-  Set ParseOptionLine = opt
-End Function
-
 
 Private Sub ProcessOption(opt As udtOption)
 ' Adds to the Options collection depending on what is provided.
   
   ' Remove the option if it already exists
   If KeyExists(opt.Variable) Then m_Options.Remove opt.Variable
-  
-  If IsBooleanOption(opt.Variable) Then opt.Value = True
-  
+ 
   m_Options.Add opt, opt.Variable
   
 End Sub
-
-Private Function IsBooleanOption(OptionString As String) As Boolean
-  If InStr(1, BOOLEAN_OPTIONS, OptionString, vbTextCompare) > 0 Then
-    IsBooleanOption = True
-  End If
-End Function
 
 
 Private Function KeyExists( _

@@ -9,7 +9,6 @@ Public Enum OptionTypesEnum
   [_LastOption] = 1
 End Enum ' OptionTypesEnum
 
-
 ' General option tokens
 Public Const OPTIONS_TOKEN As String = "#"
 Public Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
@@ -24,13 +23,3 @@ Public Const OPTION_NO_EXPORT As String = "NoExport"
 Public Const OPTION_RELATIVE_PATH As String = "RelativePath"
 Public Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
 Public Const OPTION_NO_REFRESH As String = "NoRefresh"
-
-' Option Collections
-Public Const BOOLEAN_OPTIONS As String = _
-                OPTION_NO_EXPORT & OPTION_DELIMITER & _
-                OPTION_NO_LIST & OPTION_DELIMITER & _
-                OPTION_NO_REFRESH
-Public Const STRING_OPTIONS As String = _
-                OPTION_RELATIVE_PATH & OPTION_DELIMITER & _
-                OPTION_ABSOLUTE_PATH
-
