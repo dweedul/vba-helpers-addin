@@ -47,7 +47,7 @@ Public Property Get VBComponent() As Object
 Local_Error:
   Set VBComponent = Nothing
 End Property
-Public Property Let VBComponent(VBComponent As Object)
+Public Property Set VBComponent(VBComponent As Object)
   Me.ModuleName = VBComponent.Name
   Me.ProjectName = VBComponent.Collection.Parent.Name
 End Property
@@ -72,7 +72,7 @@ Public Property Get Options(Optional Key As Variant) As Variant
   ElseIf KeyExists(Key, Options) Then
   Else
     Set out = New udtOption
-    out.Variable = Key: out.Value = False
+    out.Variable = Key ': out.Value = False
     Set Options = out
   End If
 End Property
@@ -90,7 +90,12 @@ End Sub
 '***************
 ' Public methods
 '***************
-
+Public Function OptionList(Optional Delimiter As String = vbCrLf) As String
+  Dim o As udtOption, out As String
+  For Each o In Me.Options
+    Debug.Print o.Variable & "=" & o.Value
+  Next ' o
+End Function
 
 '****************
 ' Private methods
@@ -133,7 +138,6 @@ Private Sub ProcessOption(opt As udtOption)
   m_Options.Add opt, opt.Variable
   
 End Sub
-
 
 Private Function KeyExists( _
                   Key As Variant, _

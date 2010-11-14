@@ -22,7 +22,7 @@ Public Property Get Variable() As String: Variable = m_Variable: End Property
 Public Property Let Variable(Variable As String): m_Variable = Variable: End Property
 
 Public Property Get Value() As Variant
-Attribute Item.VB_UserMemId = 0
+Attribute Value.VB_UserMemId = 0
 ' Default method of the class
   Value = m_Value
 End Property
@@ -48,7 +48,7 @@ Public Function Parse(OptionLine As String) As udtOption
   If equal_pos < 1 Then
     ' * single word options, assumed to be boolean *
     m_Variable = Trim(Mid(OptionLine, sep_pos + 1))
-    m_Value = True
+    'm_Value = True
   Else
     ' * multi-word options *
     ' get the option and its value

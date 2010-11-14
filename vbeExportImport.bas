@@ -3,23 +3,45 @@ Option Explicit
 
 Private Const cPATH_SEPARATOR = "\"
 
-Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
+Public Sub vbeExportActiveVBProject(Optional HideMe As Boolean)
 ' The HideMe removes this sub from the macros menu
+  Dim o As Object
+  Set o = Application.VBE.ActiveVBProject
+  ExportVBProject o, PathFromFileName(o.Filename)
+End Sub
+
+Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
+
   
   Dim o As Object
   Set o = Application.VBE.SelectedVBComponent
   
   ExportVBComponent o, _
-                    PathFromFileName(o.Collection.Parent.FileName)
+                    PathFromFileName(o.Collection.Parent.Filename)
 End Sub
 
 '****************
 ' Private methods
 '****************
+Private Function ExportVBProject(vbproj As Object, _
+                  ByVal FolderName As String, _
+                  Optional OverwriteExisting As Boolean = True) _
+                  As Boolean
+'*****************************************************************
+' This function exports all the code modules of a given VBProject
+' to text files. Default filenames will be used.
+'*****************************************************************
 
+  Dim vbcomp As Object
+  For Each vbcomp In vbproj.VBComponents
+    ExportVBComponent vbcomp:=vbcomp, _
+                      FolderName:=FolderName, _
+                      OverwriteExisting:=OverwriteExisting
+  Next ' vbcomp
+End Function
 Private Function ExportVBComponent(vbcomp As Object, _
                   ByVal FolderName As String, _
-                  Optional ByVal FileName As String, _
+                  Optional ByVal Filename As String, _
                   Optional OverwriteExisting As Boolean = True) As Boolean
 '*****************************************************************
 ' This function exports the code module of a VBComponent to a text
@@ -51,10 +73,10 @@ Private Function ExportVBComponent(vbcomp As Object, _
   End If
   
   Extension = GetFileExtension(vbcomp:=vbcomp)
-  If Trim(FileName) = vbNullString Then ' filename != blank
+  If Trim(Filename) = vbNullString Then ' filename != blank
     FName = vbcomp.Name & Extension
   Else
-    FName = FileName
+    FName = Filename
     If InStr(1, FName, ".", vbBinaryCompare) = 0 Then ' filename doesn't have an extension
         FName = FName & Extension
     End If
@@ -80,12 +102,12 @@ Private Function ExportVBComponent(vbcomp As Object, _
     End If
   End If
   
-  vbcomp.Export FileName:=FName
+  vbcomp.Export Filename:=FName
   ExportVBComponent = True
 End Function
 
-Private Function PathFromFileName(FileName As String)
-  PathFromFileName = Left(FileName, InStrRev(FileName, cPATH_SEPARATOR))
+Private Function PathFromFileName(Filename As String)
+  PathFromFileName = Left(Filename, InStrRev(Filename, cPATH_SEPARATOR))
 End Function
 
 Private Function GetFileExtension(vbcomp As Object) As String
@@ -108,14 +130,14 @@ Private Function GetFileExtension(vbcomp As Object) As String
     
 End Function
 
-Private Function IsValidFileExtension(FileName As String) As String
+Private Function IsValidFileExtension(Filename As String) As String
 '**********************************************************
 ' Returns true if the the file extension is bas, cls or frm
 '**********************************************************
   Dim ExtPos As Long, Ext As String
   
-  ExtPos = InStrRev(FileName, ".")
-  Ext = Right(FileName, Len(FileName) - ExtPos)
+  ExtPos = InStrRev(Filename, ".")
+  Ext = Right(Filename, Len(Filename) - ExtPos)
   
   If Ext = "bas" Or Ext = "cls" Or Ext = "frm" Then
     IsValidFileExtension = True
