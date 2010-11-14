@@ -13,6 +13,7 @@ End Enum ' OptionTypesEnum
 Public Const OPTIONS_TOKEN As String = "#"
 Public Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
 Public Const OPTION_DELIMITER As String = "|"
+
 Public Const COMMENT_TOKEN = "'"
 
 ' Information Options

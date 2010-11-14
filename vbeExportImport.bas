@@ -3,10 +3,12 @@ Option Explicit
 
 Private Const cPATH_SEPARATOR = "\"
 
-Public Sub vbeExportSelectedCodeModule()
+Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
+' The HideMe removes this sub from the macros menu
+  
   Dim o As Object
   Set o = Application.VBE.SelectedVBComponent
-
+  
   ExportVBComponent o, _
                     PathFromFileName(o.Collection.Parent.FileName)
 End Sub
