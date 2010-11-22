@@ -1,5 +1,6 @@
 Attribute VB_Name = "vbeExportImport"
 Option Explicit
+Option Private Module
 
 Private Const cPATH_SEPARATOR = "\"
 

@@ -1,5 +1,6 @@
 Attribute VB_Name = "vbeCommandBarHelpers"
 Option Explicit
+Option Private Module
 
 Private EventHandlers As New Collection
 
@@ -34,9 +35,9 @@ Public Sub vbeDeleteCustomMenu(Name As String)
 End Sub
 
 Public Sub DeleteMenuItems(Optional Tag As String)
-'*********************************************
+'---------------------------------------------
 ' Deletes all controls that have a certain tag
-'*********************************************
+'---------------------------------------------
     Dim Ctrl As Office.CommandBarControl
     Set Ctrl = Application.VBE.CommandBars.FindControl(Tag:=Tag)
     Do Until Ctrl Is Nothing
@@ -47,10 +48,10 @@ Public Sub DeleteMenuItems(Optional Tag As String)
 End Sub
 
 Public Sub vbeDeleteEventHandlers(Optional HideMe As Boolean)
-'*************************************************
+'-------------------------------------------------
 ' Delete any existing event handlers.
 ' HideMe removes this function from the macro menu
-'*************************************************
+'-------------------------------------------------
   Do Until EventHandlers.Count = 0
       EventHandlers.Remove 1
   Loop

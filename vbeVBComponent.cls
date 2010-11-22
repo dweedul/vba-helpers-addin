@@ -9,15 +9,15 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-'*****************************************************************
+'-----------------------------------------------------------------
 ' This object gathers the information from the code modules needed
 ' to perform the actions required by the other modules.
 ' This object will be a member of a collection.
-'*****************************************************************
+'-----------------------------------------------------------------
 
-'***************
+'---------------
 ' Public members
-'***************
+'---------------
 Private m_Options As Collection
 Private m_Index As Long ' index in the collection
 Private m_ModuleName As String ' name of the Code Module
@@ -25,9 +25,9 @@ Private m_ProjectName As String ' name of the Code Module
 
 Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked for options
 
-'***********
+'-----------
 ' Properties
-'***********
+'-----------
 Public Property Get Index() As Long: Index = m_Index: End Property
 Public Property Let Index(Index As Long): m_Index = Index: End Property
 
@@ -77,9 +77,9 @@ Public Property Get Options(Optional Key As Variant) As Variant
   End If
 End Property
 
-'***********************
+'-----------------------
 ' Constructor/Destructor
-'***********************
+'-----------------------
 Private Sub Class_Initialize()
   Set m_Options = New Collection
 End Sub
@@ -87,9 +87,9 @@ Private Sub Class_Terminate()
   Set m_Options = Nothing
 End Sub
 
-'***************
+'---------------
 ' Public methods
-'***************
+'---------------
 Public Function OptionList(Optional Delimiter As String = vbCrLf) As String
   Dim o As udtOption, out As String
   For Each o In Me.Options
@@ -97,9 +97,9 @@ Public Function OptionList(Optional Delimiter As String = vbCrLf) As String
   Next ' o
 End Function
 
-'****************
+'----------------
 ' Private methods
-'****************
+'----------------
 Private Sub ParseCodeModule()
   Dim i As Long
   Dim opt As udtOption

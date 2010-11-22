@@ -14,17 +14,17 @@ Attribute EvtHandler.VB_VarHelpID = -1
 
 Private Sub EvtHandler_Click(ByVal CommandBarControl As Object, _
     Handled As Boolean, CancelDefault As Boolean)
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '------------------------------------------------
     ' This is called when a item is clicked. Call the
     ' procedure named in the OnAction property of the
     ' CommandBarControl passed into this procedure.
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '------------------------------------------------
     
     On Error Resume Next
     Application.Run CommandBarControl.OnAction
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '-----------------------------------------
     ' Tell VBIDE that we've handled the event.
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '-----------------------------------------
     Handled = True
     CancelDefault = True
 End Sub

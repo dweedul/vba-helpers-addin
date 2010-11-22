@@ -1,5 +1,6 @@
-Attribute VB_Name = "OptionConstants"
+Attribute VB_Name = "AddinConstants"
 Option Explicit
+Option Private Module
 
 Public Enum OptionTypesEnum
   OptionType_Error = -1

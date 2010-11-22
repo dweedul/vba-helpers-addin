@@ -1,5 +1,6 @@
 - button to reset all Updating
 + export all in this project
 - refresh all in this project
-- export selected module
++ export selected module
 - refresh selected module
+- inject timer code at #timer comments
