@@ -47,6 +47,12 @@ Private Sub Build_AddinMenu()
     cADDIN_CODE_NAME, _
     cmdBar
   
+  vbeAddCommandBarItem _
+    "TEST", _
+    "test_TEST", _
+    cADDIN_CODE_NAME, _
+    cmdBar
+    
   cmdBar.RowIndex = 6
   cmdBar.Visible = True
 End Sub

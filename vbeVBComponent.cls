@@ -93,7 +93,7 @@ End Sub
 Public Function OptionList(Optional Delimiter As String = vbCrLf) As String
   Dim o As udtOption, out As String
   For Each o In Me.Options
-    Debug.Print o.Variable & "=" & o.Value
+    out = out & o.Variable & "=" & o.Value & Delimiter
   Next ' o
 End Function
 
@@ -104,8 +104,7 @@ Private Sub ParseCodeModule()
   Dim i As Long
   Dim opt As udtOption
   Dim tmp As String
-  
-  If IsEmpty Then Exit Sub
+
   
   With Me.VBComponent.CodeModule
   ' Loop through the lines looking for options to process
@@ -175,4 +174,3 @@ ErrNotExist:
   KeyExists = False
   On Error GoTo 0
 End Function
-

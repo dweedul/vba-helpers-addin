@@ -33,7 +33,6 @@ Public Property Let Value(Value As Variant): m_Value = Value: End Property
 '---------------
 Public Function Parse(OptionLine As String) As udtOption
   Dim equal_pos As Long, sep_pos As Long, off As Long
-  Dim var As String, val As String
   
   ' find the position of the separators used
   off = 0
@@ -48,7 +47,7 @@ Public Function Parse(OptionLine As String) As udtOption
   If equal_pos < 1 Then
     ' * single word options, assumed to be boolean *
     m_Variable = Trim(Mid(OptionLine, sep_pos + 1))
-    'm_Value = True
+    m_Value = True
   Else
     ' * multi-word options *
     ' get the option and its value
