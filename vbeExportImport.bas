@@ -16,7 +16,15 @@ Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
   Set o = Application.VBE.SelectedVBComponent
   
   ExportVBComponent o, _
-                    PathFromFileName(o.Collection.Parent.Filename)
+                    PathFromFileName(o.Collection.Parent.FileName)
+End Sub
+
+Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
+  Dim o As Object
+  Set o = Application.VBE.SelectedVBComponent
+  
+  ImportVBComponent o, _
+                    PathFromFileName(o.Collection.Parent.FileName)
 End Sub
 
 '----------------
@@ -95,8 +103,126 @@ Private Function ExportVBComponent(vbcomp As Object, _
   ExportVBComponent = True
 End Function
 
-Private Function PathFromFileName(Filename As String)
-  PathFromFileName = Left(Filename, InStrRev(Filename, cPATH_SEPARATOR))
+Private Function ImportVBComponent(VBProject As Object, _
+                  FileName As String, _
+                  Optional ModuleName As String, _
+                  Optional OverwriteExisting As Boolean = True) _
+                  As Boolean
+'******************************************************************
+' This function imports the code module of a VBComponent to a text
+' file. If ModuleName is missing, the code will be imported to
+' a module with the same name as the filename without the extension
+'******************************************************************
+  Dim vbcomp As Object, TempVBComp As Object, s As String
+  Dim SlashPos As Long, ExtPos As Long, opt As ImportExportOptions
+  
+  On Error Resume Next
+  
+  ' handle a missing module name
+  If ModuleName = vbNullString Then
+    SlashPos = InStrRev(FileName, "\")
+    ExtPos = InStrRev(FileName, ".")
+    ModuleName = Mid(FileName, SlashPos + 1, ExtPos - SlashPos - 1)
+  End If
+  
+  '******************************************************
+  ' check if module exists, then check the import options
+  '******************************************************
+  Set vbcomp = Nothing
+  Set vbcomp = VBProject.VBComponents(ModuleName)
+  
+  If Not vbcomp Is Nothing Then
+    With ParseOptions(vbcomp)
+      
+      ' exit early on NoRefresh
+      If .NoRefresh Then
+        ImportVBComponent = False
+        Exit Function
+      End If
+      
+    End With ' ParseOptions(vbcomp)
+  End If
+  
+  If OverwriteExisting = True Then
+    '***********************************
+    ' If OverwriteExisting is True, Kill
+    ' the existing temp file and remove
+    ' the existing VBComponent from the
+    ' ToVBProject.
+    '***********************************
+    With VBProject.VBComponents
+      .Remove .Item(ModuleName)
+    End With
+  Else
+    '****************************************
+    ' OverwriteExisting is False. If there is
+    ' already a VBComponent named ModuleName,
+    ' exit with a return code of False.
+    '****************************************
+    Err.Clear
+    Set vbcomp = VBProject.VBComponents(ModuleName)
+    If Err.Number <> 0 Then
+      If Err.Number = 9 Then
+        ' module doesn't exist. ignore error.
+      Else
+        ' other error. get out with return value of False
+        ImportVBComponent = False
+        Exit Function
+      End If
+    End If
+  End If
+  
+  '**********************************************
+  ' Document modules (SheetX and ThisWorkbook)
+  ' cannot be removed. So, if we are working with
+  ' a document object, delete all code in that
+  ' component and add the lines of FName
+  ' back in to the module.
+  '**********************************************
+  Set vbcomp = Nothing
+  Set vbcomp = VBProject.VBComponents(ModuleName)
+  
+  If vbcomp Is Nothing Then
+    VBProject.VBComponents.Import FileName:=FileName
+  Else
+    If vbcomp.Type = 100 Then ' 100 = vbext_ct_Document
+      ' VBComp is destination module
+      Set TempVBComp = VBProject.VBComponents.Import(FileName)
+      ' TempVBComp is source module
+      With vbcomp.CodeModule
+        .DeleteLines 1, .CountOfLines
+        s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+        .InsertLines 1, s
+      End With
+      On Error GoTo 0
+      VBProject.VBComponents.Remove TempVBComp
+    End If
+  End If
+  
+  ImportVBComponent = True
+End Function
+
+Private Function PathFromFileName(FileName As String)
+  PathFromFileName = Left(FileName, InStrRev(FileName, cPATH_SEPARATOR))
+End Function
+
+Private Function BuildFileName( _
+                   Module As Object, _
+                   Optional FileName As String) _
+                   As String
+  Dim extension As String, Fname As String
+  
+  extension = GetFileExtension(vbcomp:=Module)
+  If Trim(FileName) = vbNullString Then ' filename != blank
+    Fname = Module.Name & extension
+  Else
+    Fname = FileName
+    If InStr(1, Fname, ".", vbBinaryCompare) = 0 Then ' filename doesn't have an extension
+        Fname = Fname & extension
+    End If
+  End If
+  
+  BuildFileName = Fname
 End Function
 
 Private Function GetFileExtension(vbcomp As Object) As String
