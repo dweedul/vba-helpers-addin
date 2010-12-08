@@ -17,6 +17,9 @@ Public Const OPTION_DELIMITER As String = "|"
 
 Public Const COMMENT_TOKEN = "'"
 
+' Lists with the option types
+Public Const OPTION_STRINGS = "RelativePath|AbsolutePath"
+
 ' Information Options
 Public Const OPTION_NO_LIST As String = "NoList"
 

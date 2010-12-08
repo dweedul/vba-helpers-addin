@@ -41,16 +41,19 @@ Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
   Dim o As VBComponent, fname As String, cm As vbeVBComponent
   Set o = Application.VBE.SelectedVBComponent
   
-  ' @TODO: implement some form of option checking for the paths here!
+  Set cm = New vbeVBComponent
+  Set cm.VBComponent = o
   
-  fname = StandardizePath(ParsePath(o.Collection.Parent.Filename)) & FileNameFromModule(o)
-  
-  If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
-    ImportVBComponent o.Collection.Parent, _
-                      fname
+  If Not cm.Options(OPTION_NO_REFRESH) Then
+    fname = StandardizePath(ParsePath(o.Collection.Parent.Filename)) & FileNameFromModule(o)
+    
+    If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
+      ImportVBComponent o.Collection.Parent, _
+                        fname
+    End If
   End If
-  
-End Sub ' vbeRefreshSelectedCodeModule
+
+End Sub ' vbeRefreshSelectedCodeModule`
 
 ' ----------------
 ' Export functions
@@ -112,13 +115,13 @@ Private Function ExportVBComponent(vbcomp As Object, _
   ' Handle options within the module
   '---------------------------------
   ' exit early on NoExport option
-  If Not IsError(cm.Options(OPTION_NO_EXPORT)) Then
+  If cm.Options(OPTION_NO_EXPORT) Then
     ExportVBComponent = False
     Exit Function
   End If
   
   ' add a relative path if provided
-  If Not IsError(cm.Options(OPTION_RELATIVE_PATH)) Then
+  If Len(cm.Options(OPTION_RELATIVE_PATH)) > 0 Then
     FolderName = StandardizePath(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
   End If
   
@@ -218,10 +221,11 @@ Private Function ImportFromFile( _
         .Remove tmp_vbcomp
       End If
     Else
-      .Import Filename:=Filename
+
     End If
+    .Import Filename:=Filename
   End With
-  
+     
   ImportFromFile = True
   On Error GoTo 0
   Exit Function

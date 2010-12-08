@@ -28,6 +28,14 @@ Attribute Value.VB_UserMemId = 0
 End Property
 Public Property Let Value(Value As Variant): m_Value = Value: End Property
 
+Public Property Get OptionType() As OptionTypesEnum
+  If InStr(1, OPTION_STRINGS, Me.Variable, vbBinaryCompare) > 0 Then
+    OptionType = OptionType_String
+  Else
+    OptionType = OptionType_Boolean
+  End If
+End Property
+
 '---------------
 ' Public methods
 '---------------

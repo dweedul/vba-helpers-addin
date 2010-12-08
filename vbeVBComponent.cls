@@ -76,11 +76,16 @@ Public Property Get Options(Optional Key As Variant) As Variant
     Set Options = m_Options
   ElseIf KeyExists(Key, Options) Then
   Else
-    Options = CVErr(9999)
-'    ' add an empty option to the collection
-'    Set out = New udtOption
-'    out.Variable = Key ': out.Value = False
-'    Set Options = out
+    ' add an default option to the collection
+    Set out = New udtOption
+    out.Variable = Key ': out.Value = False
+    
+    Select Case out.OptionType
+      Case OptionType_String: out.Value = vbNullString
+      Case Else: out.Value = False
+    End Select
+    
+    Set Options = out
   End If
 End Property
 
