@@ -62,6 +62,11 @@ End Property
 
 Public Property Get Options(Optional Key As Variant) As Variant
 ' will default to a False if the key is not found
+' @optparam Key [int|string] The item to search for
+' @return [collection|obj|error] _
+'    default: option collection _
+'    key specified and found: the single option _
+'    else: an error
 
   Dim out As udtOption
   
@@ -71,9 +76,11 @@ Public Property Get Options(Optional Key As Variant) As Variant
     Set Options = m_Options
   ElseIf KeyExists(Key, Options) Then
   Else
-    Set out = New udtOption
-    out.Variable = Key ': out.Value = False
-    Set Options = out
+    Options = CVErr(9999)
+'    ' add an empty option to the collection
+'    Set out = New udtOption
+'    out.Variable = Key ': out.Value = False
+'    Set Options = out
   End If
 End Property
 

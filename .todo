@@ -3,4 +3,5 @@
 - refresh all in this project
 + export selected module
 - refresh selected module
-- inject timer code at #timer comments
+- inject timer code at #timer comments (#timer name/comment)
+- aggregate @TODOs in a tree like on the MZTools summarize functions

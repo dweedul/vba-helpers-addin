@@ -2,67 +2,105 @@ Attribute VB_Name = "vbeExportImport"
 Option Explicit
 Option Private Module
 
-Private Const cPATH_SEPARATOR = "\"
+Private Const cPATH_SEPARATOR As String = "\"
+Private Const cEXTENSION_SEPARATOR As String = "."
+
+' ----------------
+' Public functions
+' ----------------
 
 Public Sub vbeExportActiveVBProject(Optional HideMe As Boolean)
-' The HideMe removes this sub from the macros menu
+' @param HideMe [boolean] removes this sub from the macros menu
+
   Dim o As Object
   Set o = Application.VBE.ActiveVBProject
-  ExportVBProject o, PathFromFileName(o.Filename)
-End Sub
+  ExportVBProject o, ParsePath(o.Filename)
+End Sub ' vbeExportActiveVBProject
 
 Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
+' @param HideMe [boolean] removes this sub from the macros menu
+
   Dim o As Object
   Set o = Application.VBE.SelectedVBComponent
   
   ExportVBComponent o, _
-                    PathFromFileName(o.Collection.Parent.Filename)
-End Sub
+                    ParsePath(o.Collection.Parent.Filename)
+End Sub ' vbeExportSelectedCodeModule
+
+'    ' check the options
+'    Set cm.VBComponent = VBProject.VBComponents(ModuleName)
+'
+'    If Not IsError(cm.Options(OPTION_NO_REFRESH)) Then
+'      ' @TODO: this is a bad place for this
+'      GoTo Local_Error
+'    End If
 
 Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
-  Dim o As VBComponent, fname As String
+' @param HideMe [boolean] removes this sub from the macros menu
+
+  Dim o As VBComponent, fname As String, cm As vbeVBComponent
   Set o = Application.VBE.SelectedVBComponent
   
   ' @TODO: implement some form of option checking for the paths here!
   
-  fname = CleanFolderName(PathFromFileName(o.Collection.Parent.Filename)) & BuildFileName(o)
+  fname = StandardizePath(ParsePath(o.Collection.Parent.Filename)) & FileNameFromModule(o)
   
   If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
     ImportVBComponent o.Collection.Parent, _
                       fname
   End If
   
-End Sub
+End Sub ' vbeRefreshSelectedCodeModule
 
-'----------------
-' Private methods
-'----------------
+' ----------------
+' Export functions
+' ----------------
 Private Function ExportVBProject(vbproj As Object, _
                   ByVal FolderName As String, _
                   Optional OverwriteExisting As Boolean = True) _
                   As Boolean
-' This function exports all the code modules of a given VBProject
+' This function exports all the code modules of a given VBProject _
 ' to text files. Default filenames will be used.
+' @param FolderName [string]
+' @optparam OverwriteExisting [boolean]
+' @return [bool] false on error
 
   Dim vbcomp As Object
+  
+  On Error GoTo Local_Error
+  
   For Each vbcomp In vbproj.VBComponents
     ExportVBComponent vbcomp:=vbcomp, _
                       FolderName:=FolderName, _
                       OverwriteExisting:=OverwriteExisting
   Next ' vbcomp
-End Function
+  
+  ExportVBProject = True
+  On Error GoTo 0
+  Exit Function
+  
+Local_Error:
+  ExportVBProject = False
+End Function ' ExportVBProject
 
 Private Function ExportVBComponent(vbcomp As Object, _
                   ByVal FolderName As String, _
                   Optional ByVal Filename As String, _
-                  Optional OverwriteExisting As Boolean = True) As Boolean
-' This function exports the code module of a VBComponent to a text
-' file. If FileName is missing, the code will be exported to
-' a file with the same name as the VBComponent followed by the
+                  Optional OverwriteExisting As Boolean = True) _
+                  As Boolean
+' This function exports the code module of a VBComponent to a text _
+' file. If FileName is missing, the code will be exported to _
+' a file with the same name as the VBComponent followed by the _
 ' appropriate extension.
+' @param FolderName [string]
+' @optparam FileName [string]
+' @optparam OverwriteExisting [bool]
+' @return [bool] False on error
 
   Dim fname As String
   Dim cm As vbeVBComponent
+  
+  On Error GoTo Local_Error
   
   Set cm = New vbeVBComponent
   Set cm.VBComponent = vbcomp
@@ -74,24 +112,24 @@ Private Function ExportVBComponent(vbcomp As Object, _
   ' Handle options within the module
   '---------------------------------
   ' exit early on NoExport option
-  If Not IsEmpty(cm.Options(OPTION_NO_EXPORT)) Then
+  If Not IsError(cm.Options(OPTION_NO_EXPORT)) Then
     ExportVBComponent = False
     Exit Function
   End If
   
   ' add a relative path if provided
-  If Not IsEmpty(cm.Options(OPTION_RELATIVE_PATH)) Then
-    FolderName = CleanFolderName(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
+  If Not IsError(cm.Options(OPTION_RELATIVE_PATH)) Then
+    FolderName = StandardizePath(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
   End If
   
-  fname = BuildFileName(vbcomp, Filename)
+  fname = FileNameFromModule(vbcomp, Filename)
   
   ' create the directory if it doesn't exist
   If Dir(FolderName, vbDirectory) = vbNullString Then
     MkDir FolderName
   End If
   
-  fname = CleanFolderName(FolderName) & fname
+  fname = StandardizePath(FolderName) & fname
   
   If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
     If OverwriteExisting = True Then
@@ -103,39 +141,51 @@ Private Function ExportVBComponent(vbcomp As Object, _
   End If
   
   vbcomp.Export Filename:=fname
+  
   ExportVBComponent = True
-End Function
+  On Error GoTo 0
+  Exit Function
 
-Private Function ImportVBComponent(VBProject As Object, _
+Local_Error:
+  ExportVBComponent = False
+End Function ' ExportVBComponent
+
+' ----------------
+' Import Functions
+' ----------------
+Private Function ImportVBComponent( _
+                  VBProject As Object, _
                   Filename As String, _
                   Optional ModuleName As String, _
                   Optional OverwriteExisting As Boolean = True) _
                   As Boolean
-' This function imports the code module of a VBComponent to a text
-' file. If ModuleName is missing, the code will be imported to
-' a module with the same name as the filename without the extension
+' This function imports the code module of a VBComponent from a text _
+' file. If ModuleName is missing, the code will be imported to _
+' a module with the same name as the filename without the extension _
+' @param VBProject [VBProject]
+' @param FileName [string]
+' @optparam ModuleName [string]
+' @optparam OverwriteExisting [bool]
+' @return [bool] False on error
 
   Dim cm As vbeVBComponent
   
   On Error GoTo Local_Error
   
-  Set cm = New vbeVBComponent
-  
   ' handle a missing module name
   If ModuleName = vbNullString Then
-    ModuleName = GetModuleNameFromFileName(Filename)
+    ModuleName = ParseBaseFilename(Filename)
   End If
   
   If VBComponentExists(ModuleName, VBProject) Then
-    ' check the options
-    Set cm.VBComponent = VBProject.VBComponents(ModuleName)
-    
-    If Not IsEmpty(cm.Options(OPTION_NO_REFRESH)) Or Not OverwriteExisting Then
+    If OverwriteExisting Then
+      DeleteModule VBProject, ModuleName
+    Else
       GoTo Local_Error
     End If
   End If
   
-  VBProject.VBComponents.Import Filename:=Filename
+  ImportFromFile VBProject, Filename, ModuleName
   
   ImportVBComponent = True
   On Error GoTo 0
@@ -143,25 +193,115 @@ Private Function ImportVBComponent(VBProject As Object, _
   
 Local_Error:
   ImportVBComponent = False
-End Function
+End Function ' ImportVBComponent
 
-Private Function PathFromFileName(Filename As String)
-  PathFromFileName = Left(Filename, InStrRev(Filename, cPATH_SEPARATOR))
-End Function
+Private Function ImportFromFile( _
+                  VBProject As VBProject, _
+                  Filename As String, _
+                  ModuleName As String) _
+                  As Boolean
+' @param VBProject [VBProject]
+' @param Filename [string]
+' @param ModuleName [string]
 
-Private Function CleanFolderName(FolderName As String) As String
-                   
-  If StrComp(Right(FolderName, 1), "\", vbBinaryCompare) = 0 Then
-    CleanFolderName = FolderName
+  Dim vbcomp As VBComponent, tmp_vbcomp As VBComponent
+  Dim s As String
+  
+  On Error GoTo Local_Error
+  
+  With VBProject.VBComponents
+    If VBComponentExists(ModuleName, VBProject) Then
+      If .Item(ModuleName).Type = 100 Then ' 100 =vbext_ct_Document
+        Set tmp_vbcomp = .Import(Filename)
+        s = tmp_vbcomp.CodeModule.Lines(1, tmp_vbcomp.CodeModule.CountOfLines)
+        .Item(ModuleName).CodeModule.InsertLines 1, s
+        .Remove tmp_vbcomp
+      End If
+    Else
+      .Import Filename:=Filename
+    End If
+  End With
+  
+  ImportFromFile = True
+  On Error GoTo 0
+  Exit Function
+  
+Local_Error:
+  ImportFromFile = False
+End Function ' ImportFromFile
+
+' -------------------------------
+' Filename manipulation functions
+' -------------------------------
+' @TODO: Adjust the parse methods to handle .gitignore
+
+Public Function ParsePath(Filename As String) As String
+' @param FileName [string]
+' @return [string] Path portion of the filename (i.e. everything before the \)
+  
+  Dim slash_pos As Long
+  
+  slash_pos = InStrRev(Filename, cPATH_SEPARATOR)
+  
+  If slash_pos > 0 Then
+    ParsePath = Left(Filename, slash_pos)
   Else
-    CleanFolderName = FolderName & "\"
+    ParsePath = vbNullString
+  End If
+End Function ' ParsePath
+
+Public Function ParseBaseFilename(Filename As String) As String
+' @param FileName [string]
+' @return [string] filename without path or extension
+
+  Dim slash_pos As Long, ext_pos As Long
+  
+  ' handle a missing module name
+  slash_pos = InStrRev(Filename, cPATH_SEPARATOR)
+  ext_pos = InStrRev(Filename, cEXTENSION_SEPARATOR)
+  
+  If ext_pos > 1 Then
+    ParseBaseFilename = Mid(Filename, slash_pos + 1, ext_pos - slash_pos - 1)
+  Else
+    ParseBaseFilename = Right(Filename, Len(Filename) - slash_pos)
+  End If
+End Function ' ParseBaseFilename
+
+Public Function ParseExtension(Filename As String) As String
+' @param FileName [string]
+' @return [string] file extension (i.e. everything to the right of the last .)
+  Dim ext_pos As Long
+  ext_pos = InStrRev(Filename, cEXTENSION_SEPARATOR)
+  
+  If ext_pos > 1 Then
+    ParseExtension = Right(Filename, Len(Filename) - ext_pos)
+  Else
+    ParseExtension = vbNullString
   End If
 End Function
 
-Private Function BuildFileName( _
+Private Function StandardizePath(FolderName As String) As String
+' Adjusts the path so that it always ends with a \
+' @param FolderName [string]
+' @return [string] Path name with a consistent ending caracter
+
+  If StrComp(Right(FolderName, 1), cPATH_SEPARATOR, vbBinaryCompare) = 0 Then
+    StandardizePath = FolderName
+  Else
+    StandardizePath = FolderName & cPATH_SEPARATOR
+  End If
+End Function ' StandardizePath
+
+Private Function FileNameFromModule( _
                    Module As Object, _
                    Optional Filename As String) _
                    As String
+' Builds a filename from a Module object's information
+' @param Module [CodeModule]
+' @optparam Filename [string] overrides the module's default settings
+' @return [string]
+' @TODO: give this a more meaningful name
+
   Dim extension As String, fname As String
   
   extension = GetFileExtension(vbcomp:=Module)
@@ -174,23 +314,16 @@ Private Function BuildFileName( _
     End If
   End If
   
-  BuildFileName = fname
-End Function
+  FileNameFromModule = fname
+End Function ' FileNameFromModule
 
-Private Function GetModuleNameFromFileName( _
-                   file_name As String) _
-                   As String
-  Dim slash_pos As Long, ext_pos As Long
-  
-  ' handle a missing module name
-  slash_pos = InStrRev(file_name, "\")
-  ext_pos = InStrRev(file_name, ".")
-  GetModuleNameFromFileName = Mid(file_name, slash_pos + 1, ext_pos - slash_pos - 1)
-End Function
 
 Private Function GetFileExtension(vbcomp As Object) As String
-' This returns the appropriate file extension based on the Type of
+' This returns the appropriate file extension based on the Type of _
 ' the VBComponent
+' @param vbcomp [VBComponent]
+' @return [string]
+
     Select Case vbcomp.Type
         Case 2 ' 2 = vbext_ct_ClassModule
             GetFileExtension = ".cls"
@@ -204,7 +337,7 @@ Private Function GetFileExtension(vbcomp As Object) As String
             GetFileExtension = ".bas"
     End Select
     
-End Function
+End Function ' GetFileExtension
 
 Private Function IsValidFileExtension(Filename As String) As Boolean
   Dim ExtPos As Long, Ext As String
@@ -217,4 +350,5 @@ Private Function IsValidFileExtension(Filename As String) As Boolean
   Else
     IsValidFileExtension = False
   End If
-End Function
+End Function ' IsValidFileExtension
+
