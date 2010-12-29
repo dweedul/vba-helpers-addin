@@ -27,14 +27,6 @@ Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
                     ParsePath(o.Collection.Parent.Filename)
 End Sub ' vbeExportSelectedCodeModule
 
-'    ' check the options
-'    Set cm.VBComponent = VBProject.VBComponents(ModuleName)
-'
-'    If Not IsError(cm.Options(OPTION_NO_REFRESH)) Then
-'      ' @TODO: this is a bad place for this
-'      GoTo Local_Error
-'    End If
-
 Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
 ' @param HideMe [boolean] removes this sub from the macros menu
 

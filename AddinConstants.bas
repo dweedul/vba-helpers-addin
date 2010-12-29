@@ -1,4 +1,6 @@
 Attribute VB_Name = "AddinConstants"
+' #NoRefresh
+
 Option Explicit
 Option Private Module
 
@@ -28,3 +30,5 @@ Public Const OPTION_NO_EXPORT As String = "NoExport"
 Public Const OPTION_RELATIVE_PATH As String = "RelativePath"
 Public Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
 Public Const OPTION_NO_REFRESH As String = "NoRefresh"
+
+Public Const cDELETED_MODULE_NAME_APPENDIX As String = "__d3l"

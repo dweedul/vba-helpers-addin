@@ -31,7 +31,11 @@ Public Function DeleteModule( _
                   VBProject As VBProject, _
                   ModuleName As String) _
                   As Boolean
-  
+' This does not work properly on any code module that is used actively at the time of running.
+' Any bars that depend on the deleted module will stop working properly and need to be re-built
+' e.g. CommandBar1 has button that is linked to some code that is refreshed.  The bar will stop working after
+' the code is run.
+
   Dim vbcomp As VBComponent
   
   On Error GoTo Local_Error
@@ -40,7 +44,9 @@ Public Function DeleteModule( _
     If .Item(ModuleName).Type = vbext_ct_Document Then
       ' ClearCodeModule .Item(ModuleName)
     Else
-      .Remove .Item(ModuleName)
+      Set vbcomp = .Item(ModuleName)
+      vbcomp.Name = vbcomp.Name & cDELETED_MODULE_NAME_APPENDIX
+      .Remove vbcomp
     End If
   End With
   

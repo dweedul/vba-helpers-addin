@@ -11,9 +11,9 @@ Option Explicit
 
 Const cADDIN_CODE_NAME = "VBEHelpers"
 
-'****************
+' ---------------
 ' Workbook Events
-'****************
+' ---------------
 
 Private Sub Workbook_Open()
   Build_AddinMenu
@@ -23,9 +23,9 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
   Remove_AddinMenu
 End Sub
 
-'********************
+' -------------------
 ' Addin Specific Code
-'********************
+' -------------------
 Private Sub Build_AddinMenu()
   Dim cmdBar As CommandBar
   
