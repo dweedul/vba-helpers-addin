@@ -63,10 +63,10 @@ End Property
 Public Property Get Options(Optional Key As Variant) As Variant
 ' will default to a False if the key is not found
 ' @optparam Key [int|string] The item to search for
-' @return [collection|obj|error] _
+' @return [collection|obj|boolean] _
 '    default: option collection _
 '    key specified and found: the single option _
-'    else: an error
+'    else: FALSE
 
   Dim out As udtOption
   

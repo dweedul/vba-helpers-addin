@@ -28,6 +28,8 @@ Public Function vbeAddCommandBarItem( _
   Set MenuEvent.EvtHandler = Application.VBE.Events.CommandBarEvents(cmdBarItem)
   
   EventHandlers.Add MenuEvent
+  
+  Set vbeAddCommandBarItem = cmdBarItem
 End Function
 
 Public Sub vbeDeleteCustomMenu(Name As String)

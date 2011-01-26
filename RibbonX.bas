@@ -11,7 +11,7 @@ Public Sub rbx_onLoad(ribbon As IRibbonUI)
 End Sub
 
 Public Sub rbxbtnSelectionTypeName_onAction(control As IRibbonControl)
-  RefreshRibbonControl control.ID
+  ReloadRibbonControl control.ID
 End Sub
 
 Public Sub rbxbtnSelectionTypeName_getLabel(control As IRibbonControl, ByRef returnedVal)
@@ -28,7 +28,7 @@ End Sub
 ' ---------------------
 ' Ribbon Meta-functions
 ' ---------------------
-Private Function RefreshRibbonControl(ControlId As String) As Boolean
+Private Function ReloadRibbonControl(ControlId As String) As Boolean
 ' @return [Boolean] False on error
 ' @TODO: Add comments here
   
@@ -38,11 +38,11 @@ Private Function RefreshRibbonControl(ControlId As String) As Boolean
     rbx.InvalidateControl ControlId
   End If
   
-  RefreshRibbonControl = True
+  ReloadRibbonControl = True
   On Error GoTo 0
   Exit Function
 
 Local_Error:
-  RefreshRibbonControl = False
+  ReloadRibbonControl = False
 End Function
 

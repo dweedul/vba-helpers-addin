@@ -1,6 +1,4 @@
 Attribute VB_Name = "AddinConstants"
-' #NoRefresh
-
 Option Explicit
 Option Private Module
 
@@ -11,6 +9,9 @@ Public Enum OptionTypesEnum
   OptionType_String = 1
   [_LastOption] = 1
 End Enum ' OptionTypesEnum
+
+' WARNINGS
+Public Const WARN_USER_ON_OVERWRITE As Boolean = True
 
 ' General option tokens
 Public Const OPTIONS_TOKEN As String = "#"
@@ -29,6 +30,4 @@ Public Const OPTION_NO_LIST As String = "NoList"
 Public Const OPTION_NO_EXPORT As String = "NoExport"
 Public Const OPTION_RELATIVE_PATH As String = "RelativePath"
 Public Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
-Public Const OPTION_NO_REFRESH As String = "NoRefresh"
-
-Public Const cDELETED_MODULE_NAME_APPENDIX As String = "__d3l"
+Public Const OPTION_NO_RELOAD As String = "NoReload"

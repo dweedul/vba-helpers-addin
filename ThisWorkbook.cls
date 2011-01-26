@@ -27,7 +27,7 @@ End Sub
 ' Addin Specific Code
 ' -------------------
 Private Sub Build_AddinMenu()
-  Dim cmdBar As CommandBar
+  Dim cmdBar As CommandBar, pop As CommandBarPopup
   
   vbeDeleteCustomMenu cADDIN_CODE_NAME
   vbeDeleteEventHandlers
@@ -35,25 +35,38 @@ Private Sub Build_AddinMenu()
   Set cmdBar = Application.VBE.CommandBars.Add(cADDIN_CODE_NAME)
   cmdBar.Position = msoBarTop
   
+  Set pop = vbeAddCommandBarItem( _
+    "Import/Export Code", _
+    "vbeExportSelectedCodeModule", _
+    cADDIN_CODE_NAME, _
+    cmdBar, _
+    msoControlPopup)
+  
   vbeAddCommandBarItem _
     "Export Selected File", _
     "vbeExportSelectedCodeModule", _
     cADDIN_CODE_NAME, _
-    cmdBar
+    pop
   
   vbeAddCommandBarItem _
     "Export Active VBProject", _
     "vbeExportActiveVBProject", _
     cADDIN_CODE_NAME, _
-    cmdBar
+    pop
   
   vbeAddCommandBarItem _
-    "TEST", _
-    "test_TEST", _
+    "Reload Selected File", _
+    "vbeReloadCodeModule", _
     cADDIN_CODE_NAME, _
-    cmdBar
+    pop
+  
+  vbeAddCommandBarItem _
+    "Reload Active VBProject", _
+    "vbeReloadActiveVBProject", _
+    cADDIN_CODE_NAME, _
+    pop
     
-  cmdBar.RowIndex = 6
+  'cmdBar.RowIndex = 6
   cmdBar.Visible = True
 End Sub
 

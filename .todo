@@ -1,7 +1,11 @@
 - button to reset all Updating
 + export all in this project
-- refresh all in this project
++ refresh all in this project
 + export selected module
-- refresh selected module
++ refresh selected module
 - inject timer code at #timer comments (#timer name/comment)
 - aggregate @TODOs in a tree like on the MZTools summarize functions
+- reloads should follow paths
+- implement absolute path export/import
+- dropdown for codes
+- auto add of watched vars for a given project: #watch context etc

@@ -8,7 +8,6 @@ Private Const cEXTENSION_SEPARATOR As String = "."
 ' ----------------
 ' Public functions
 ' ----------------
-
 Public Sub vbeExportActiveVBProject(Optional HideMe As Boolean)
 ' @param HideMe [boolean] removes this sub from the macros menu
 
@@ -27,16 +26,32 @@ Public Sub vbeExportSelectedCodeModule(Optional HideMe As Boolean)
                     ParsePath(o.Collection.Parent.Filename)
 End Sub ' vbeExportSelectedCodeModule
 
-Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
+Public Sub vbeReloadActiveVBProject(Optional HideMe As Boolean)
 ' @param HideMe [boolean] removes this sub from the macros menu
+  Dim vbcomp As VBComponent, vbcomps As VBComponents
+  
+  Set vbcomps = Application.VBE.ActiveVBProject.VBComponents
+  For Each vbcomp In vbcomps
+    vbeReloadCodeModule vbcomp
+  Next ' vbcomp
+End Sub
+
+Public Sub vbeReloadCodeModule( _
+             Optional vbcomp As VBComponent)
+' @optparam vbcomp [VBComponent]
 
   Dim o As VBComponent, fname As String, cm As vbeVBComponent
-  Set o = Application.VBE.SelectedVBComponent
+  
+  If vbcomp Is Nothing Then
+    Set o = Application.VBE.SelectedVBComponent
+  Else
+    Set o = vbcomp
+  End If
   
   Set cm = New vbeVBComponent
   Set cm.VBComponent = o
   
-  If Not cm.Options(OPTION_NO_REFRESH) Then
+  If Not cm.Options(OPTION_NO_RELOAD) Then
     fname = StandardizePath(ParsePath(o.Collection.Parent.Filename)) & FileNameFromModule(o)
     
     If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
@@ -45,7 +60,7 @@ Public Sub vbeRefreshSelectedCodeModule(Optional HideMe As Boolean)
     End If
   End If
 
-End Sub ' vbeRefreshSelectedCodeModule`
+End Sub ' vbeReloadCodeModule
 
 ' ----------------
 ' Export functions
@@ -162,8 +177,6 @@ Private Function ImportVBComponent( _
 ' @optparam ModuleName [string]
 ' @optparam OverwriteExisting [bool]
 ' @return [bool] False on error
-
-  Dim cm As vbeVBComponent
   
   On Error GoTo Local_Error
   
@@ -199,7 +212,7 @@ Private Function ImportFromFile( _
 ' @param Filename [string]
 ' @param ModuleName [string]
 
-  Dim vbcomp As VBComponent, tmp_vbcomp As VBComponent
+  Dim tmp_vbcomp As VBComponent
   Dim s As String
   
   On Error GoTo Local_Error
@@ -213,9 +226,8 @@ Private Function ImportFromFile( _
         .Remove tmp_vbcomp
       End If
     Else
-
+      .Import Filename:=Filename
     End If
-    .Import Filename:=Filename
   End With
      
   ImportFromFile = True
@@ -312,7 +324,6 @@ Private Function FileNameFromModule( _
   
   FileNameFromModule = fname
 End Function ' FileNameFromModule
-
 
 Private Function GetFileExtension(vbcomp As Object) As String
 ' This returns the appropriate file extension based on the Type of _
