@@ -9,13 +9,20 @@ Public Function vbeAddCommandBarItem( _
               ProcName As String, _
               Tag As String, _
               TargetControlCollection As Object, _
-              Optional ControlType As MsoControlType = msoControlButton) _
+              Optional ControlType As MsoControlType = msoControlButton, _
+              Optional KeyBoardShortcut As String) _
               As CommandBarControl
   
   Dim MenuEvent As vbeCommandHandler
   Dim cmdBarItem As CommandBarControl
   
   Set MenuEvent = New vbeCommandHandler
+  
+  ' Add in the hotkey
+  If Not KeyBoardShortcut = vbNullString Then
+    Application.OnKey KeyBoardShortcut, ProcName
+    Caption = Caption & TranslateKeyboardshortcut(KeyBoardShortcut)
+  End If
   
   Set cmdBarItem = TargetControlCollection.Controls.Add(Type:=ControlType)
   With cmdBarItem
@@ -24,9 +31,10 @@ Public Function vbeAddCommandBarItem( _
     .Tag = Tag
     If .Type = msoControlButton Then .Style = msoButtonCaption
   End With
+
   
+  ' Add the event to the event handler
   Set MenuEvent.EvtHandler = Application.VBE.Events.CommandBarEvents(cmdBarItem)
-  
   EventHandlers.Add MenuEvent
   
   Set vbeAddCommandBarItem = cmdBarItem

@@ -9,3 +9,4 @@
 - implement absolute path export/import
 - dropdown for codes
 - auto add of watched vars for a given project: #watch context etc
+- find #Begin and #End blocks

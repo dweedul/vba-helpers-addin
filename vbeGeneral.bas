@@ -1,6 +1,6 @@
 Attribute VB_Name = "vbeGeneral"
 Option Explicit
-'Option Private Module
+Option Private Module
 
 Public Function VBComponentExists( _
                   ModuleName As String, _
@@ -77,7 +77,28 @@ Public Function CopyCodeModule( _
   End With
   
    Destination.InsertLines 1, tmp
+   
 Local_Error:
   If Err.Number <> 0 Then Debug.Print Err.Description
 End Function
 
+Public Function TranslateKeyboardshortcut( _
+                  Shortcut As String) _
+                  As String
+  
+  On Error GoTo Local_Error
+  
+  Shortcut = Replace(Shortcut, "+", "Shift+", 1, 1)
+  Shortcut = Replace(Shortcut, "^", "Ctrl+", 1, 1)
+  Shortcut = Replace(Shortcut, "%", "Alt+", 1, 1)
+  Shortcut = Replace(Shortcut, "{", "", 1, 1)
+  Shortcut = Replace(Shortcut, "}", "", 1, 1)
+
+  TranslateKeyboardshortcut = "[" & Shortcut & "]"
+  
+  On Error GoTo 0
+  Exit Function
+  
+Local_Error:
+  TranslateKeyboardshortcut = vbNullString
+End Function

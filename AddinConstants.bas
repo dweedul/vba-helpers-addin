@@ -13,6 +13,8 @@ End Enum ' OptionTypesEnum
 ' WARNINGS
 Public Const WARN_USER_ON_OVERWRITE As Boolean = True
 
+Public Const vbeKEYBOARD_SHORTCUT_IDENTIFIER As String = "*"
+
 ' General option tokens
 Public Const OPTIONS_TOKEN As String = "#"
 Public Const OPTIONS_ASSIGNMENT_TOKEN As String = "="
