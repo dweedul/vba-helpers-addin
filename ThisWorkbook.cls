@@ -52,8 +52,7 @@ Private Sub Build_AddinMenu()
     "Export Active VBProject", _
     "vbeExportActiveVBProject", _
     cADDIN_CODE_NAME, _
-    pop, _
-    KeyBoardShortcut:="^%e"
+    pop
   
   vbeAddCommandBarItem _
     "Reload Selected File", _
@@ -67,7 +66,12 @@ Private Sub Build_AddinMenu()
     cADDIN_CODE_NAME, _
     pop
     
-  'cmdBar.RowIndex = 6
+  vbeAddCommandBarItem _
+    "Experiment", _
+    "vbeExperimental", _
+    cADDIN_CODE_NAME, _
+    pop, , "^1"
+
   cmdBar.Visible = True
 End Sub
 

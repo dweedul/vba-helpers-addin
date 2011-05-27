@@ -28,24 +28,24 @@ End Sub ' vbeExportSelectedCodeModule
 
 Public Sub vbeReloadActiveVBProject(Optional HideMe As Boolean)
 ' @param HideMe [boolean] removes this sub from the macros menu
-  Dim vbcomp As VBComponent, vbcomps As VBComponents
+  Dim VBComp As VBComponent, vbcomps As VBComponents
   
   Set vbcomps = Application.VBE.ActiveVBProject.VBComponents
-  For Each vbcomp In vbcomps
-    vbeReloadCodeModule vbcomp
+  For Each VBComp In vbcomps
+    vbeReloadCodeModule VBComp
   Next ' vbcomp
 End Sub
 
 Public Sub vbeReloadCodeModule( _
-             Optional vbcomp As VBComponent)
+             Optional VBComp As VBComponent)
 ' @optparam vbcomp [VBComponent]
 
   Dim o As VBComponent, fname As String, cm As vbeVBComponent
   
-  If vbcomp Is Nothing Then
+  If VBComp Is Nothing Then
     Set o = Application.VBE.SelectedVBComponent
   Else
-    Set o = vbcomp
+    Set o = VBComp
   End If
   
   Set cm = New vbeVBComponent
@@ -65,7 +65,7 @@ End Sub ' vbeReloadCodeModule
 ' ----------------
 ' Export functions
 ' ----------------
-Private Function ExportVBProject(vbproj As Object, _
+Private Function ExportVBProject(VBProj As Object, _
                   ByVal FolderName As String, _
                   Optional OverwriteExisting As Boolean = True) _
                   As Boolean
@@ -75,12 +75,12 @@ Private Function ExportVBProject(vbproj As Object, _
 ' @optparam OverwriteExisting [boolean]
 ' @return [bool] false on error
 
-  Dim vbcomp As Object
+  Dim VBComp As Object
   
   On Error GoTo Local_Error
   
-  For Each vbcomp In vbproj.VBComponents
-    ExportVBComponent vbcomp:=vbcomp, _
+  For Each VBComp In VBProj.VBComponents
+    ExportVBComponent VBComp:=VBComp, _
                       FolderName:=FolderName, _
                       OverwriteExisting:=OverwriteExisting
   Next ' vbcomp
@@ -93,7 +93,7 @@ Local_Error:
   ExportVBProject = False
 End Function ' ExportVBProject
 
-Private Function ExportVBComponent(vbcomp As Object, _
+Private Function ExportVBComponent(VBComp As Object, _
                   ByVal FolderName As String, _
                   Optional ByVal Filename As String, _
                   Optional OverwriteExisting As Boolean = True) _
@@ -113,7 +113,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
   On Error GoTo Local_Error
   
   Set cm = New vbeVBComponent
-  Set cm.VBComponent = vbcomp
+  Set cm.VBComponent = VBComp
   
   ' Don't export empty modules, it is stupid '
   If cm.IsEmpty Then Exit Function
@@ -132,7 +132,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
     FolderName = StandardizePath(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
   End If
   
-  fname = FileNameFromModule(vbcomp, Filename)
+  fname = FileNameFromModule(VBComp, Filename)
   
   ' create the directory if it doesn't exist
   If Dir(FolderName, vbDirectory) = vbNullString Then
@@ -150,7 +150,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
     End If
   End If
   
-  vbcomp.Export Filename:=fname
+  VBComp.Export Filename:=fname
   
   ExportVBComponent = True
   On Error GoTo 0
@@ -312,7 +312,7 @@ Private Function FileNameFromModule( _
 
   Dim extension As String, fname As String
   
-  extension = GetFileExtension(vbcomp:=Module)
+  extension = GetFileExtension(VBComp:=Module)
   If Trim(Filename) = vbNullString Then ' filename != blank
     fname = Module.Name & extension
   Else
@@ -325,13 +325,13 @@ Private Function FileNameFromModule( _
   FileNameFromModule = fname
 End Function ' FileNameFromModule
 
-Private Function GetFileExtension(vbcomp As Object) As String
+Private Function GetFileExtension(VBComp As Object) As String
 ' This returns the appropriate file extension based on the Type of _
 ' the VBComponent
 ' @param vbcomp [VBComponent]
 ' @return [string]
 
-    Select Case vbcomp.Type
+    Select Case VBComp.Type
         Case 2 ' 2 = vbext_ct_ClassModule
             GetFileExtension = ".cls"
         Case 100 ' 100 = vbext_ct_Document
