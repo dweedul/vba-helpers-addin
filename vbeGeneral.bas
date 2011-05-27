@@ -1,23 +1,22 @@
 Attribute VB_Name = "vbeGeneral"
 Option Explicit
-Option Private Module
 
 Public Function VBComponentExists( _
                   ModuleName As String, _
                   Optional VBProject As Variant) _
                   As Boolean
   
-  Dim tmp As Variant, vbproj As Object
+  Dim tmp As Variant, VBProj As Object
   
   On Error GoTo Local_Error
   
   If IsMissing(VBProject) Then
     Set VBProject = ThisWorkbook.VBProject
   Else
-    Set vbproj = VBProject
+    Set VBProj = VBProject
   End If
 
-  Set tmp = vbproj.VBComponents(ModuleName)
+  Set tmp = VBProj.VBComponents(ModuleName)
   
   VBComponentExists = True
   On Error GoTo 0
@@ -36,7 +35,7 @@ Public Function DeleteModule( _
 ' e.g. CommandBar1 has button that is linked to some code that is Reloaded.  The bar will stop working after
 ' the code is run.
 
-  Dim vbcomp As VBComponent
+  Dim VBComp As VBComponent
   
   On Error GoTo Local_Error
   
@@ -44,8 +43,8 @@ Public Function DeleteModule( _
     If .Item(ModuleName).Type = vbext_ct_Document Then
       ClearCodeModule .Item(ModuleName)
     Else
-      Set vbcomp = .Item(ModuleName)
-      .Remove vbcomp
+      Set VBComp = .Item(ModuleName)
+      .Remove VBComp
     End If
   End With
   
@@ -57,9 +56,9 @@ Local_Error:
   DeleteModule = False
 End Function
 
-Public Sub ClearCodeModule(vbcomp As VBComponent)
+Public Sub ClearCodeModule(VBComp As VBComponent)
   
-  With vbcomp.CodeModule
+  With VBComp.CodeModule
     .DeleteLines 1, .CountOfLines
   End With ' VBComp.CodeModule
 End Sub
@@ -82,23 +81,3 @@ Local_Error:
   If Err.Number <> 0 Then Debug.Print Err.Description
 End Function
 
-Public Function TranslateKeyboardshortcut( _
-                  Shortcut As String) _
-                  As String
-  
-  On Error GoTo Local_Error
-  
-  Shortcut = Replace(Shortcut, "+", "Shift+", 1, 1)
-  Shortcut = Replace(Shortcut, "^", "Ctrl+", 1, 1)
-  Shortcut = Replace(Shortcut, "%", "Alt+", 1, 1)
-  Shortcut = Replace(Shortcut, "{", "", 1, 1)
-  Shortcut = Replace(Shortcut, "}", "", 1, 1)
-
-  TranslateKeyboardshortcut = "[" & Shortcut & "]"
-  
-  On Error GoTo 0
-  Exit Function
-  
-Local_Error:
-  TranslateKeyboardshortcut = vbNullString
-End Function

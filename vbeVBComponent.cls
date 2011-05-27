@@ -21,7 +21,7 @@ Option Explicit
 Private m_Options As Collection
 Private m_Index As Long ' index in the collection
 Private m_ModuleName As String ' name of the Code Module
-Private m_ProjectName As String ' name of the Code Module
+Private m_ProjectName As String ' name of the Project
 
 Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked for options
 
@@ -60,7 +60,7 @@ Public Property Get IsEmpty() As Boolean
   End If
 End Property
 
-Public Property Get Options(Optional Key As Variant) As Variant
+Public Property Get Options(Optional key As Variant) As Variant
 ' will default to a False if the key is not found
 ' @optparam Key [int|string] The item to search for
 ' @return [collection|obj|boolean] _
@@ -72,13 +72,13 @@ Public Property Get Options(Optional Key As Variant) As Variant
   
   If Not m_Parsed Then ParseCodeModule
   
-  If IsMissing(Key) Then
+  If IsMissing(key) Then
     Set Options = m_Options
-  ElseIf KeyExists(Key, Options) Then
+  ElseIf KeyExists(key, Options) Then
   Else
     ' add an default option to the collection
     Set out = New udtOption
-    out.Variable = Key ': out.Value = False
+    out.Variable = key ': out.Value = False
     
     Select Case out.OptionType
       Case OptionType_String: out.Value = vbNullString
@@ -107,6 +107,8 @@ Public Function OptionList(Optional Delimiter As String = vbCrLf) As String
   For Each o In Me.Options
     out = out & o.Variable & "=" & o.Value & Delimiter
   Next ' o
+  
+  OptionList = out
 End Function
 
 '----------------
@@ -151,30 +153,30 @@ Private Sub ProcessOption(opt As udtOption)
 End Sub
 
 Private Function KeyExists( _
-                  Key As Variant, _
+                  key As Variant, _
                   Optional FoundItem As Variant) _
                   As Boolean
 ' Check if item exists in the collection by key or by position
 
   On Error GoTo ErrNotExist
    
-  If VarType(Key) = vbString Then ' check the string keys
+  If VarType(key) = vbString Then ' check the string keys
     'Test if item exists
-    If VarType(m_Options.Item(CStr(Key))) = vbObject Then
+    If VarType(m_Options.Item(CStr(key))) = vbObject Then
       'Return an object
-      Set FoundItem = m_Options.Item(CStr(Key))
+      Set FoundItem = m_Options.Item(CStr(key))
     Else
       'Return an standard variable
-      FoundItem = m_Options.Item(CStr(Key))
+      FoundItem = m_Options.Item(CStr(key))
     End If
   Else  ' check the int keys
     'Test if item exists
-    If VarType(m_Options.Item(Int(Key))) = vbObject Then
+    If VarType(m_Options.Item(Int(key))) = vbObject Then
       'Return an object
-      Set FoundItem = m_Options.Item(Int(Key))
+      Set FoundItem = m_Options.Item(Int(key))
     Else
       'Return an standard variable
-      FoundItem = m_Options.Item(Int(Key))
+      FoundItem = m_Options.Item(Int(key))
     End If
   End If
   

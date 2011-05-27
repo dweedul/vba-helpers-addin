@@ -70,7 +70,7 @@ Private Sub Build_AddinMenu()
     "Experiment", _
     "vbeExperimental", _
     cADDIN_CODE_NAME, _
-    pop, , "^1"
+    pop
 
   cmdBar.Visible = True
 End Sub
