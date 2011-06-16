@@ -12,3 +12,4 @@ X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use 
 - auto add of watched vars for a given project: #watch variable context etc
 - find grouped code: use the {{#section}} {{/section}} start and end tags (like {{moustache}}) (maybe get rid of the moustaches?)
 - build PowerPoint version
+- Add a button to copy to the clipboard the path the current project/file.
