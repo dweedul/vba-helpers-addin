@@ -31,3 +31,5 @@ Public Const OPTION_NO_EXPORT As String = "NoExport"
 Public Const OPTION_RELATIVE_PATH As String = "RelativePath"
 Public Const OPTION_ABSOLUTE_PATH As String = "AbsolutePath" ' *NYI*
 Public Const OPTION_NO_RELOAD As String = "NoReload"
+
+Public Const vbeSTRIPPED_FILE_SUFFIX As String = " (stripped)"
