@@ -26,10 +26,10 @@ Local_Error:
   Set vbeWorkbookFromProject = Nothing
 End Function
 
-Public Sub vbeDeleteVBProject(VBProject As Object)
+Public Function vbeDeleteVBProject(VBProject As Object) As Workbook
 ' Deletes the VBProject by saving as a file that cannot include VBA
 
-  Dim fmt As XlFileFormat
+  Dim fmt As XlFileFormat, fname As String, tmp_fname As String
   Dim wb As Workbook
   Dim dsp As Boolean
   
@@ -46,21 +46,26 @@ Public Sub vbeDeleteVBProject(VBProject As Object)
   ' store the filetype of the current file
   fmt = wb.FileFormat
   fname = wb.FullName
+  tmp_fname = fname & vbeSTRIPPED_FILE_SUFFIX
   
   ' save the file as an xslx file
-  wb.SaveAs fname & vbeSTRIPPED_FILE_SUFFIX, xlOpenXMLWorkbook
+  wb.SaveAs tmp_fname, xlOpenXMLWorkbook
   
   ' close and reopen to ensure that the code is gone
   wb.Close
-  Set wb = Workbooks.Open(fname & vbeSTRIPPED_FILE_SUFFIX)
+  Set wb = Workbooks.Open(tmp_fname)
  
   ' save again as the original
   wb.SaveAs fname, fmt
   
   ' delete the temp file
-
+  Kill tmp_fname
+  
+  ' return the workbook for further use
+  Set vbeDeleteVBProject = wb.VBProject
+  
 Local_Error:
   If Err.Number <> 0 Then Debug.Print Err.Description
   Application.DisplayAlerts = dsp
-End Sub
+End Function
 
