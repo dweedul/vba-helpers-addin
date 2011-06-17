@@ -1,83 +1,25 @@
 Attribute VB_Name = "vbeGeneral"
 Option Explicit
 
-Public Function VBComponentExists( _
-                  ModuleName As String, _
-                  Optional VBProject As Variant) _
-                  As Boolean
+Public Function vbeWorkbookFromProject( _
+                  VBProject As Variant) As Workbook
+' @param VBProject [VBProject]
+' @return [workbook|nothing]
+
+  Dim fname As String, wbs As Workbooks
   
-  Dim tmp As Variant, VBProj As Object
+  Set wbs = Application.Workbooks
   
   On Error GoTo Local_Error
   
-  If IsMissing(VBProject) Then
-    Set VBProject = ThisWorkbook.VBProject
-  Else
-    Set VBProj = VBProject
-  End If
-
-  Set tmp = VBProj.VBComponents(ModuleName)
+  fname = VBProject.Filename
+  fname = vbeParseBaseFilename(fname) & "." & vbeParseExtension(fname)
   
-  VBComponentExists = True
+  Set vbeWorkbookFromProject = Application.Workbooks(fname)
+  
   On Error GoTo 0
   Exit Function
   
 Local_Error:
-  VBComponentExists = False
+  Set vbeWorkbookFromProject = Nothing
 End Function
-
-Public Function DeleteModule( _
-                  VBProject As VBProject, _
-                  ModuleName As String) _
-                  As Boolean
-' This does not work properly on any code module that is used actively at the time of running.
-' Any bars that depend on the deleted module will stop working properly and need to be re-built
-' e.g. CommandBar1 has button that is linked to some code that is Reloaded.  The bar will stop working after
-' the code is run.
-
-  Dim VBComp As VBComponent
-  
-  On Error GoTo Local_Error
-  
-  With VBProject.VBComponents
-    If .Item(ModuleName).Type = vbext_ct_Document Then
-      ClearCodeModule .Item(ModuleName)
-    Else
-      Set VBComp = .Item(ModuleName)
-      .Remove VBComp
-    End If
-  End With
-  
-  DeleteModule = True
-  On Error GoTo 0
-  Exit Function
-  
-Local_Error:
-  DeleteModule = False
-End Function
-
-Public Sub ClearCodeModule(VBComp As VBComponent)
-  
-  With VBComp.CodeModule
-    .DeleteLines 1, .CountOfLines
-  End With ' VBComp.CodeModule
-End Sub
-
-Public Function CopyCodeModule( _
-                  Source As VBComponent, _
-                  Destination As VBComponent) _
-                  As Boolean
-  
-  On Error GoTo Local_Error
-  
-  Dim tmp As String
-  With Source.CodeModule
-    tmp = .Lines(1, .CountOfLines)
-  End With
-  
-   Destination.InsertLines 1, tmp
-   
-Local_Error:
-  If Err.Number <> 0 Then Debug.Print Err.Description
-End Function
-
