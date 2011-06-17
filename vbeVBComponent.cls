@@ -22,6 +22,7 @@ Private m_Options As Collection
 Private m_Index As Long ' index in the collection
 Private m_ModuleName As String ' name of the Code Module
 Private m_ProjectName As String ' name of the Project
+Private m_ComponentType As vbext_ComponentType
 
 Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked for options
 
@@ -37,6 +38,9 @@ Public Property Let ProjectName(ProjectName As String): m_ProjectName = ProjectN
 Public Property Get ModuleName() As String: ModuleName = m_ModuleName: End Property
 Public Property Let ModuleName(ModuleName As String): m_ModuleName = ModuleName: End Property
 
+Public Property Get ComponentType() As vbext_ComponentType: ComponentType = m_ComponentType: End Property
+Public Property Let ComponentType(ComponentType As vbext_ComponentType): m_ComponentType = ComponentType: End Property
+
 Public Property Get VBComponent() As Object
   On Error GoTo Local_Error
   Set VBComponent = Application.VBE.VBProjects(ProjectName).VBComponents(ModuleName)
@@ -50,6 +54,7 @@ End Property
 Public Property Set VBComponent(VBComponent As Object)
   Me.ModuleName = VBComponent.Name
   Me.ProjectName = VBComponent.Collection.Parent.Name
+  Me.ComponentType = VBComponent.Type
 End Property
 
 Public Property Get IsEmpty() As Boolean
