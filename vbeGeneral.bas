@@ -26,6 +26,67 @@ Local_Error:
   Set vbeWorkbookFromProject = Nothing
 End Function
 
+Public Function vbeVBComponentExists( _
+                  ModuleName As String, _
+                  Optional VBProject As Variant) _
+                  As Boolean
+  
+  Dim tmp As Variant, vbproj As Object
+  
+  On Error GoTo Local_Error
+  
+  If IsMissing(VBProject) Then
+    Set VBProject = ThisWorkbook.VBProject
+  Else
+    Set vbproj = VBProject
+  End If
+
+  Set tmp = vbproj.VBComponents(ModuleName)
+  
+  vbeVBComponentExists = True
+  On Error GoTo 0
+  Exit Function
+  
+Local_Error:
+  vbeVBComponentExists = False
+End Function
+
+Public Function vbeDeleteModule( _
+                  VBProject As VBProject, _
+                  ModuleName As String) _
+                  As Boolean
+' This does not work properly on any code module that is used actively at the time of running.
+' Any bars that depend on the deleted module will stop working properly and need to be re-built
+' e.g. CommandBar1 has button that is linked to some code that is Reloaded.  The bar will stop working after
+' the code is run.
+
+  Dim VBComp As VBComponent
+  
+  On Error GoTo Local_Error
+  
+  With VBProject.VBComponents
+    If .Item(ModuleName).Type = vbext_ct_Document Then
+      vbeClearCodeModule .Item(ModuleName)
+    Else
+      Set VBComp = .Item(ModuleName)
+      .Remove VBComp
+    End If
+  End With
+  
+  vbeDeleteModule = True
+  On Error GoTo 0
+  Exit Function
+  
+Local_Error:
+  vbeDeleteModule = False
+End Function
+
+Public Sub vbeClearCodeModule(VBComp As VBComponent)
+  With VBComp.CodeModule
+    .DeleteLines 1, .CountOfLines
+  End With ' VBComp.CodeModule
+End Sub
+
 Public Function vbeDeleteVBProject(VBProject As Object) As VBProject
 ' Deletes the VBProject by saving as a file that cannot include VBA
 
