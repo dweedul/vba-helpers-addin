@@ -6,25 +6,50 @@ Option Private Module
 ' Public functions
 ' ----------------
 Public Sub vbeReloadActiveVBProject(Optional HideMe As Boolean)
-' @param HideMe [boolean] removes this sub from the macros menu
-  Dim VBComp As VBComponent, vbcomps As VBComponents
+  Dim vbproj As VBProject, vbcomp As VBComponent
+  Dim cm As vbeVBComponent, col As Collection, fn As Variant
+  Dim msg As VbMsgBoxResult
   
-  Set vbcomps = Application.VBE.ActiveVBProject.VBComponents
-  For Each VBComp In vbcomps
-    vbeReloadCodeModule VBComp
+  On Error GoTo Local_Error
+  
+  ' get the active vb project
+  Set vbproj = Application.VBE.ActiveVBProject
+  
+  ' confirm this action
+  msg = MsgBox("Are you sure that you want to reload the code in " & vbproj.Name, vbYesNo)
+  If msg = vbNo Then GoTo Local_Error
+  
+  ' build a collection of filenames
+  Set col = New Collection
+  For Each vbcomp In vbproj.VBComponents
+    Set cm = New vbeVBComponent
+    Set cm.VBComponent = vbcomp
+    If Not cm.IsEmpty And Not cm.Options(OPTION_NO_RELOAD) Then
+      col.Add vbeParsePath(vbproj.Filename) & vbeFileNameFromModule(vbcomp)
+    End If
   Next ' vbcomp
+  
+  ' delete the current code project
+  Set vbproj = vbeDeleteVBProject(vbproj)
+  
+  ' import the files back into the project
+  For Each fn In col
+    ImportVBComponent vbproj, CStr(fn)
+  Next ' fn
+  
+Local_Error:
 End Sub
 
 Public Sub vbeReloadCodeModule( _
-             Optional VBComp As VBComponent)
+             Optional vbcomp As VBComponent)
 ' @optparam vbcomp [VBComponent]
 
   Dim o As VBComponent, fname As String, cm As vbeVBComponent
   
-  If VBComp Is Nothing Then
+  If vbcomp Is Nothing Then
     Set o = Application.VBE.SelectedVBComponent
   Else
-    Set o = VBComp
+    Set o = vbcomp
   End If
   
   Set cm = New vbeVBComponent
@@ -66,9 +91,9 @@ Private Function ImportVBComponent( _
     ModuleName = vbeParseBaseFilename(Filename)
   End If
   
-  If VBComponentExists(ModuleName, VBProject) Then
+  If vbeVBComponentExists(ModuleName, VBProject) Then
     If OverwriteExisting Then
-      DeleteModule VBProject, ModuleName
+      vbeDeleteModule VBProject, ModuleName
     Else
       GoTo Local_Error
     End If
@@ -99,7 +124,7 @@ Private Function ImportFromFile( _
   On Error GoTo Local_Error
   
   With VBProject.VBComponents
-    If VBComponentExists(ModuleName, VBProject) Then
+    If vbeVBComponentExists(ModuleName, VBProject) Then
       If .Item(ModuleName).Type = 100 Then ' 100 =vbext_ct_Document
         Set tmp_vbcomp = .Import(Filename)
         s = tmp_vbcomp.CodeModule.Lines(1, tmp_vbcomp.CodeModule.CountOfLines)
