@@ -35,12 +35,11 @@ Private Sub Build_AddinMenu()
   Set cmdBar = Application.VBE.CommandBars.Add(cADDIN_CODE_NAME)
   cmdBar.Position = msoBarTop
   
-  Set pop = vbeAddCommandBarItem( _
-    "Import/Export Code", _
-    "vbeExportSelectedCodeModule", _
-    cADDIN_CODE_NAME, _
-    cmdBar, _
-    msoControlPopup)
+  Set pop = cmdBar.Controls.Add(Type:=msoControlPopup)
+  With pop
+    .Caption = "Import/Export Code"
+    .Tag = cADDIN_CODE_NAME
+  End With
   
   vbeAddCommandBarItem _
     "Export Selected File", _
