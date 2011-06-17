@@ -25,7 +25,7 @@ End Sub ' vbeExportSelectedCodeModule
 ' ----------------
 ' Export functions
 ' ----------------
-Private Function ExportVBProject(VBProj As Object, _
+Private Function ExportVBProject(vbproj As Object, _
                   ByVal FolderName As String, _
                   Optional OverwriteExisting As Boolean = True) _
                   As Boolean
@@ -35,12 +35,12 @@ Private Function ExportVBProject(VBProj As Object, _
 ' @optparam OverwriteExisting [boolean]
 ' @return [bool] false on error
 
-  Dim VBComp As Object
+  Dim vbcomp As Object
   
   On Error GoTo Local_Error
   
-  For Each VBComp In VBProj.VBComponents
-    ExportVBComponent VBComp:=VBComp, _
+  For Each vbcomp In vbproj.VBComponents
+    ExportVBComponent vbcomp:=vbcomp, _
                       FolderName:=FolderName, _
                       OverwriteExisting:=OverwriteExisting
   Next ' vbcomp
@@ -53,7 +53,7 @@ Local_Error:
   ExportVBProject = False
 End Function ' ExportVBProject
 
-Private Function ExportVBComponent(VBComp As Object, _
+Private Function ExportVBComponent(vbcomp As Object, _
                   ByVal FolderName As String, _
                   Optional ByVal Filename As String, _
                   Optional OverwriteExisting As Boolean = True) _
@@ -73,7 +73,7 @@ Private Function ExportVBComponent(VBComp As Object, _
   On Error GoTo Local_Error
   
   Set cm = New vbeVBComponent
-  Set cm.VBComponent = VBComp
+  Set cm.VBComponent = vbcomp
   
   ' Don't export empty modules, it is stupid '
   If cm.IsEmpty Then Exit Function
@@ -92,7 +92,7 @@ Private Function ExportVBComponent(VBComp As Object, _
     FolderName = vbeStandardizePath(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
   End If
   
-  fname = vbeFileNameFromModule(VBComp, Filename)
+  fname = vbeFileNameFromModule(vbcomp, Filename)
   
   ' create the directory if it doesn't exist
   If Dir(FolderName, vbDirectory) = vbNullString Then
@@ -110,7 +110,7 @@ Private Function ExportVBComponent(VBComp As Object, _
     End If
   End If
   
-  VBComp.Export Filename:=fname
+  vbcomp.Export Filename:=fname
   
   ExportVBComponent = True
   On Error GoTo 0

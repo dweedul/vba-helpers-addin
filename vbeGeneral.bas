@@ -60,7 +60,7 @@ Public Function vbeDeleteModule( _
 ' e.g. CommandBar1 has button that is linked to some code that is Reloaded.  The bar will stop working after
 ' the code is run.
 
-  Dim VBComp As VBComponent
+  Dim vbcomp As VBComponent
   
   On Error GoTo Local_Error
   
@@ -68,8 +68,8 @@ Public Function vbeDeleteModule( _
     If .Item(ModuleName).Type = vbext_ct_Document Then
       vbeClearCodeModule .Item(ModuleName)
     Else
-      Set VBComp = .Item(ModuleName)
-      .Remove VBComp
+      Set vbcomp = .Item(ModuleName)
+      .Remove vbcomp
     End If
   End With
   
@@ -81,8 +81,8 @@ Local_Error:
   vbeDeleteModule = False
 End Function
 
-Public Sub vbeClearCodeModule(VBComp As VBComponent)
-  With VBComp.CodeModule
+Public Sub vbeClearCodeModule(vbcomp As VBComponent)
+  With vbcomp.CodeModule
     .DeleteLines 1, .CountOfLines
   End With ' VBComp.CodeModule
 End Sub
