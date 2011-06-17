@@ -1,6 +1,6 @@
 - button to reset all Updating
 + export all in this project
-! refresh all in this project - this does not add the file back, may need to close the workbook first...
++ refresh all in this project
 + export selected module
 ! refresh selected module - this does not add the file back, may need to close the workbook first...
 - VBScript to refresh all in this project
