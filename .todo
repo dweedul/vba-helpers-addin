@@ -1,11 +1,7 @@
-- button to reset all Updating
-+ export all in this project
-+ refresh all in this project
-+ export selected module
 ! refresh selected module - this does not add the file back, may need to close the workbook first...
-- VBScript to refresh all in this project
+
+- button to reset all Updating
 - inject timer code at #timer comments (#timer name/comment)
-X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use MZTools Find function for this
 - reloads should follow paths
 - implement absolute path export/import
 - dropdown for #codes
@@ -13,3 +9,10 @@ X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use 
 - find grouped code: use the {{#section}} {{/section}} start and end tags (like {{moustache}}) (maybe get rid of the moustaches?)
 - build PowerPoint version
 - Add a button to copy to the clipboard the path the current project/file.
+
++ export all in this project
++ refresh all in this project
++ export selected module
+
+X VBScript to refresh all in this project
+X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use MZTools Find function for this
