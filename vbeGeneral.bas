@@ -26,7 +26,7 @@ Local_Error:
   Set vbeWorkbookFromProject = Nothing
 End Function
 
-Public Function vbeDeleteVBProject(VBProject As Object) As Workbook
+Public Function vbeDeleteVBProject(VBProject As Object) As VBProject
 ' Deletes the VBProject by saving as a file that cannot include VBA
 
   Dim fmt As XlFileFormat, fname As String, tmp_fname As String
