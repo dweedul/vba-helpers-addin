@@ -14,7 +14,6 @@ Const cADDIN_CODE_NAME = "VBEHelpers"
 ' ---------------
 ' Workbook Events
 ' ---------------
-
 Private Sub Workbook_Open()
   Build_AddinMenu
 End Sub
@@ -64,12 +63,6 @@ Private Sub Build_AddinMenu()
     "vbeReloadActiveVBProject", _
     cADDIN_CODE_NAME, _
     pop
-    
-  vbeAddCommandBarItem _
-    "Experiment", _
-    "vbeExperimental", _
-    cADDIN_CODE_NAME, _
-    pop
 
   cmdBar.Visible = True
 End Sub
@@ -77,4 +70,3 @@ End Sub
 Private Sub Remove_AddinMenu()
   vbeDeleteCustomMenu cADDIN_CODE_NAME
 End Sub
-
