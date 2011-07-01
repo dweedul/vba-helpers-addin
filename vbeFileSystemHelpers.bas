@@ -80,7 +80,7 @@ Public Function vbeFileNameFromModule( _
 
   Dim extension As String, fname As String
   
-  extension = vbeGetFileExtension(vbcomp:=Module)
+  extension = vbeGetFileExtension(VBComp:=Module)
   If Trim(Filename) = vbNullString Then ' filename != blank
     fname = Module.Name & extension
   Else
@@ -93,13 +93,13 @@ Public Function vbeFileNameFromModule( _
   vbeFileNameFromModule = fname
 End Function ' vbeFileNameFromModule
 
-Public Function vbeGetFileExtension(vbcomp As Object) As String
+Public Function vbeGetFileExtension(VBComp As Object) As String
 ' This returns the appropriate file extension based on the Type of _
 ' the VBComponent
 ' @param vbcomp [VBComponent]
 ' @return [string]
 
-    Select Case vbcomp.Type
+    Select Case VBComp.Type
         Case 2 ' 2 = vbext_ct_ClassModule
             vbeGetFileExtension = ".cls"
         Case 100 ' 100 = vbext_ct_Document
