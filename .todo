@@ -7,11 +7,11 @@
 - auto add of watched vars for a given project: #watch variable context etc
 - find grouped code: use the {{#section}} {{/section}} start and end tags (like {{moustache}}) (maybe get rid of the moustaches?)
 - build PowerPoint version
-- Add a button to copy to the clipboard the path the current project/file.
 
 + export all in this project
 + refresh all in this project
 + export selected module
++ Add a button to copy to the clipboard the path the current project/file.
 
 X VBScript to refresh all in this project
 X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use MZTools Find function for this
