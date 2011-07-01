@@ -1,6 +1,5 @@
 ! refresh selected module - this does not add the file back, may need to close the workbook first...
 
-- button to reset all Updating
 - inject timer code at #timer comments (#timer name/comment)
 - reloads should follow paths
 - implement absolute path export/import
@@ -16,3 +15,4 @@
 
 X VBScript to refresh all in this project
 X aggregate @TODOs in a tree like on the MZTools summarize functions -> can use MZTools Find function for this
+X button to reset all Updating (I don't even know what this means anymore... stupid past self, not explaining himself)
