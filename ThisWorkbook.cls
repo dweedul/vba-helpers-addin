@@ -14,6 +14,7 @@ Const cADDIN_CODE_NAME = "VBEHelpers"
 ' ---------------
 ' Workbook Events
 ' ---------------
+
 Private Sub Workbook_Open()
   Build_AddinMenu
 End Sub
@@ -26,7 +27,7 @@ End Sub
 ' Addin Specific Code
 ' -------------------
 Private Sub Build_AddinMenu()
-  Dim cmdBar As CommandBar, pop As CommandBarPopup
+  Dim cmdBar As CommandBar, pop As CommandBarPopup, ctl As control
   
   vbeDeleteCustomMenu cADDIN_CODE_NAME
   vbeDeleteEventHandlers
@@ -52,21 +53,34 @@ Private Sub Build_AddinMenu()
     cADDIN_CODE_NAME, _
     pop
   
-  vbeAddCommandBarItem _
-    "Reload Selected File", _
-    "vbeReloadCodeModule", _
-    cADDIN_CODE_NAME, _
-    pop
+'  vbeAddCommandBarItem _
+'    "Reload Selected File", _
+'    "vbeReloadCodeModule", _
+'    cADDIN_CODE_NAME, _
+'    pop
   
   vbeAddCommandBarItem _
     "Reload Active VBProject", _
     "vbeReloadActiveVBProject", _
     cADDIN_CODE_NAME, _
     pop
-
+  
+  ' Standalone buttons:
+  
+  With vbeAddCommandBarItem( _
+    "Copy Project Path to Clipboard", _
+    "vbeCopyPathToClipboard", _
+    cADDIN_CODE_NAME, _
+    cmdBar)
+    
+    .FaceId = 22
+    .Style = msoButtonIcon
+  End With
+  
   cmdBar.Visible = True
 End Sub
 
 Private Sub Remove_AddinMenu()
   vbeDeleteCustomMenu cADDIN_CODE_NAME
 End Sub
+

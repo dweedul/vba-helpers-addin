@@ -6,50 +6,19 @@ Option Private Module
 ' Public functions
 ' ----------------
 Public Sub vbeReloadActiveVBProject(Optional HideMe As Boolean)
-  Dim vbproj As VBProject, vbcomp As VBComponent
-  Dim cm As vbeVBComponent, col As Collection, fn As Variant
-  Dim msg As VbMsgBoxResult
   
-  On Error GoTo Local_Error
-  
-  ' get the active vb project
-  Set vbproj = Application.VBE.ActiveVBProject
-  
-  ' confirm this action
-  msg = MsgBox("Are you sure that you want to reload the code in " & vbproj.Name, vbYesNo)
-  If msg = vbNo Then GoTo Local_Error
-  
-  ' build a collection of filenames
-  Set col = New Collection
-  For Each vbcomp In vbproj.VBComponents
-    Set cm = New vbeVBComponent
-    Set cm.VBComponent = vbcomp
-    If Not cm.IsEmpty And Not cm.Options(OPTION_NO_RELOAD) Then
-      col.Add vbeParsePath(vbproj.Filename) & vbeFileNameFromModule(vbcomp)
-    End If
-  Next ' vbcomp
-  
-  ' delete the current code project
-  Set vbproj = vbeDeleteVBProject(vbproj)
-  
-  ' import the files back into the project
-  For Each fn In col
-    ImportVBComponent vbproj, CStr(fn)
-  Next ' fn
-  
-Local_Error:
 End Sub
 
 Public Sub vbeReloadCodeModule( _
-             Optional vbcomp As VBComponent)
+             Optional VBComp As VBComponent)
 ' @optparam vbcomp [VBComponent]
 
   Dim o As VBComponent, fname As String, cm As vbeVBComponent
   
-  If vbcomp Is Nothing Then
+  If VBComp Is Nothing Then
     Set o = Application.VBE.SelectedVBComponent
   Else
-    Set o = vbcomp
+    Set o = VBComp
   End If
   
   Set cm = New vbeVBComponent

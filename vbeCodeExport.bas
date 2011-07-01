@@ -35,12 +35,12 @@ Private Function ExportVBProject(vbproj As Object, _
 ' @optparam OverwriteExisting [boolean]
 ' @return [bool] false on error
 
-  Dim vbcomp As Object
+  Dim VBComp As Object
   
   On Error GoTo Local_Error
   
-  For Each vbcomp In vbproj.VBComponents
-    ExportVBComponent vbcomp:=vbcomp, _
+  For Each VBComp In vbproj.VBComponents
+    ExportVBComponent VBComp:=VBComp, _
                       FolderName:=FolderName, _
                       OverwriteExisting:=OverwriteExisting
   Next ' vbcomp
@@ -53,7 +53,7 @@ Local_Error:
   ExportVBProject = False
 End Function ' ExportVBProject
 
-Private Function ExportVBComponent(vbcomp As Object, _
+Private Function ExportVBComponent(VBComp As Object, _
                   ByVal FolderName As String, _
                   Optional ByVal Filename As String, _
                   Optional OverwriteExisting As Boolean = True) _
@@ -73,7 +73,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
   On Error GoTo Local_Error
   
   Set cm = New vbeVBComponent
-  Set cm.VBComponent = vbcomp
+  Set cm.VBComponent = VBComp
   
   ' Don't export empty modules, it is stupid '
   If cm.IsEmpty Then Exit Function
@@ -92,7 +92,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
     FolderName = vbeStandardizePath(FolderName) & cm.Options(OPTION_RELATIVE_PATH)
   End If
   
-  fname = vbeFileNameFromModule(vbcomp, Filename)
+  fname = vbeFileNameFromModule(VBComp, Filename)
   
   ' create the directory if it doesn't exist
   If Dir(FolderName, vbDirectory) = vbNullString Then
@@ -110,7 +110,7 @@ Private Function ExportVBComponent(vbcomp As Object, _
     End If
   End If
   
-  vbcomp.Export Filename:=fname
+  VBComp.Export Filename:=fname
   
   ExportVBComponent = True
   On Error GoTo 0

@@ -60,7 +60,7 @@ Public Function vbeDeleteModule( _
 ' e.g. CommandBar1 has button that is linked to some code that is Reloaded.  The bar will stop working after
 ' the code is run.
 
-  Dim vbcomp As VBComponent
+  Dim VBComp As VBComponent
   
   On Error GoTo Local_Error
   
@@ -68,8 +68,8 @@ Public Function vbeDeleteModule( _
     If .Item(ModuleName).Type = vbext_ct_Document Then
       vbeClearCodeModule .Item(ModuleName)
     Else
-      Set vbcomp = .Item(ModuleName)
-      .Remove vbcomp
+      Set VBComp = .Item(ModuleName)
+      .Remove VBComp
     End If
   End With
   
@@ -81,8 +81,8 @@ Local_Error:
   vbeDeleteModule = False
 End Function
 
-Public Sub vbeClearCodeModule(vbcomp As VBComponent)
-  With vbcomp.CodeModule
+Public Sub vbeClearCodeModule(VBComp As VBComponent)
+  With VBComp.CodeModule
     .DeleteLines 1, .CountOfLines
   End With ' VBComp.CodeModule
 End Sub
@@ -130,3 +130,10 @@ Local_Error:
   Application.DisplayAlerts = dsp
 End Function
 
+Public Sub vbeCopyPathToClipboard()
+  Dim DataObj As New MSForms.DataObject, s As String
+  s = vbeParsePath(Application.VBE.ActiveVBProject.Filename)
+  s = Left(s, Len(s) - 1) ' remove the trailing slash... it causes problems with command line
+  DataObj.SetText s
+  DataObj.PutInClipboard
+End Sub
