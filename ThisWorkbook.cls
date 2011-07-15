@@ -27,7 +27,7 @@ End Sub
 ' Addin Specific Code
 ' -------------------
 Private Sub Build_AddinMenu()
-  Dim cmdBar As CommandBar, pop As CommandBarPopup, ctl As control
+  Dim cmdBar As CommandBar, pop As CommandBarPopup
   
   vbeDeleteCustomMenu cADDIN_CODE_NAME
   vbeDeleteEventHandlers
@@ -83,4 +83,6 @@ End Sub
 Private Sub Remove_AddinMenu()
   vbeDeleteCustomMenu cADDIN_CODE_NAME
 End Sub
+
+
 
