@@ -1,5 +1,6 @@
 ! refresh selected module - this does not add the file back, may need to close the workbook first...
 
+- reloading should also set project references and project properties (e.g. name, compile switches)
 - inject timer code at #timer comments (#timer name/comment)
 - reloads should follow paths
 - implement absolute path export/import
