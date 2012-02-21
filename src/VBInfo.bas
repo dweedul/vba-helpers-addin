@@ -1,4 +1,5 @@
 Attribute VB_Name = "VBInfo"
+' #RelativePath = src
 ' #NoExport
 ' #NoRefresh
 ' #NoList

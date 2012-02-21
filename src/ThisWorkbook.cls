@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+' #RelativePath = src
 Option Explicit
 
 Const cADDIN_CODE_NAME = "VBEHelpers"

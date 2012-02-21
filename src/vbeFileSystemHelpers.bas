@@ -1,4 +1,6 @@
 Attribute VB_Name = "vbeFileSystemHelpers"
+' #RelativePath = src
+
 Option Explicit
 Option Private Module
 

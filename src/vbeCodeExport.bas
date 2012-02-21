@@ -1,4 +1,5 @@
 Attribute VB_Name = "vbeCodeExport"
+' #RelativePath = src
 Option Explicit
 
 ' ----------------

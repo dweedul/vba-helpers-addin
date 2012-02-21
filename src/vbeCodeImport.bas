@@ -1,4 +1,5 @@
 Attribute VB_Name = "vbeCodeImport"
+' #RelativePath = src
 Option Explicit
 Option Private Module
 
