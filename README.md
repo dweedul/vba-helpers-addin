@@ -1,3 +1,4 @@
+
 ! refresh selected module - this does not add the file back, may need to close the workbook first...
 
 - reloading should also set project references and project properties (e.g. name, compile switches)
@@ -8,6 +9,7 @@
 - auto add of watched vars for a given project: #watch variable context etc
 - find grouped code: use the {{#section}} {{/section}} start and end tags (like {{moustache}}) (maybe get rid of the moustaches?)
 - build PowerPoint version
+- comment/uncomment all debug.* lines
 
 + export all in this project
 + refresh all in this project
