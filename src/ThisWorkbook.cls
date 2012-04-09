@@ -12,6 +12,8 @@ Option Explicit
 
 Const cADDIN_CODE_NAME = "VBEHelpers"
 
+Public VBProjCache As VBProject
+
 ' ---------------
 ' Workbook Events
 ' ---------------

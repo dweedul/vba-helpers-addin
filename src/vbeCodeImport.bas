@@ -61,8 +61,12 @@ Public Sub vbeReloadCodeModule( _
     fname = vbeStandardizePath(vbeParsePath(o.Collection.Parent.Filename)) & vbeFileNameFromModule(o)
     
     If Dir(fname, vbNormal + vbHidden + vbSystem) <> vbNullString Then
-      ImportVBComponent o.Collection.Parent, _
-                        fname
+      Set ThisWorkbook.VBProjCache = o.Collection.Parent
+      
+      Application.OnTime Now(), ThisWorkbook.Name & "!'ImportVBComponent ThisWorkbook.VBProjCache, """ & fname & """'"
+      
+      'ImportVBComponent o.Collection.Parent, _
+      '                  fname
     End If
   End If
 
@@ -71,11 +75,12 @@ End Sub ' vbeReloadCodeModule
 ' ----------------
 ' Import Functions
 ' ----------------
-Private Function ImportVBComponent( _
+Public Function ImportVBComponent( _
                   VBProject As Object, _
                   Filename As String, _
                   Optional ModuleName As String, _
-                  Optional OverwriteExisting As Boolean = True) _
+                  Optional OverwriteExisting As Boolean = True, _
+                  Optional SelectOnDone As Boolean = True) _
                   As Boolean
 ' This function imports the code module of a VBComponent from a text _
 ' file. If ModuleName is missing, the code will be imported to _
@@ -102,6 +107,8 @@ Private Function ImportVBComponent( _
   End If
   
   ImportFromFile VBProject, Filename, ModuleName
+
+  If SelectOnDone Then VBProject.VBComponents(ModuleName).Activate
   
   ImportVBComponent = True
   On Error GoTo 0
