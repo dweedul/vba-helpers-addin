@@ -33,17 +33,17 @@ Public Function vbeVBComponentExists( _
                   Optional VBProject As Variant) _
                   As Boolean
   
-  Dim tmp As Variant, vbproj As Object
+  Dim tmp As Variant, VBProj As Object
   
   On Error GoTo Local_Error
   
   If IsMissing(VBProject) Then
     Set VBProject = ThisWorkbook.VBProject
   Else
-    Set vbproj = VBProject
+    Set VBProj = VBProject
   End If
 
-  Set tmp = vbproj.VBComponents(ModuleName)
+  Set tmp = VBProj.VBComponents(ModuleName)
   
   vbeVBComponentExists = True
   On Error GoTo 0

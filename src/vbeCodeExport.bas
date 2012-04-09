@@ -1,5 +1,6 @@
 Attribute VB_Name = "vbeCodeExport"
 ' #RelativePath = src
+
 Option Explicit
 
 ' ----------------
@@ -26,7 +27,7 @@ End Sub ' vbeExportSelectedCodeModule
 ' ----------------
 ' Export functions
 ' ----------------
-Private Function ExportVBProject(vbproj As Object, _
+Private Function ExportVBProject(VBProj As Object, _
                   ByVal FolderName As String, _
                   Optional OverwriteExisting As Boolean = True) _
                   As Boolean
@@ -40,7 +41,7 @@ Private Function ExportVBProject(vbproj As Object, _
   
   On Error GoTo Local_Error
   
-  For Each VBComp In vbproj.VBComponents
+  For Each VBComp In VBProj.VBComponents
     ExportVBComponent VBComp:=VBComp, _
                       FolderName:=FolderName, _
                       OverwriteExisting:=OverwriteExisting
