@@ -56,11 +56,11 @@ Private Sub Build_AddinMenu()
     cADDIN_CODE_NAME, _
     pop
   
-'  vbeAddCommandBarItem _
-'    "Reload Selected File", _
-'    "vbeReloadCodeModule", _
-'    cADDIN_CODE_NAME, _
-'    pop
+  vbeAddCommandBarItem _
+    "Reload Selected File", _
+    "vbeReloadCodeModule", _
+    cADDIN_CODE_NAME, _
+    pop
   
   vbeAddCommandBarItem _
     "Reload Active VBProject", _
