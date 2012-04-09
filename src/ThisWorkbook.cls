@@ -7,9 +7,12 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+' #RelativePath = src
 Option Explicit
 
 Const cADDIN_CODE_NAME = "VBEHelpers"
+
+Public VBProjCache As VBProject
 
 ' ---------------
 ' Workbook Events
@@ -35,12 +38,11 @@ Private Sub Build_AddinMenu()
   Set cmdBar = Application.VBE.CommandBars.Add(cADDIN_CODE_NAME)
   cmdBar.Position = msoBarTop
   
-  Set pop = vbeAddCommandBarItem( _
-    "Import/Export Code", _
-    "vbeExportSelectedCodeModule", _
-    cADDIN_CODE_NAME, _
-    cmdBar, _
-    msoControlPopup)
+  Set pop = cmdBar.Controls.Add(Type:=msoControlPopup)
+  With pop
+    .Caption = "Import/Export Code"
+    .Tag = cADDIN_CODE_NAME
+  End With
   
   vbeAddCommandBarItem _
     "Export Selected File", _
@@ -65,17 +67,25 @@ Private Sub Build_AddinMenu()
     "vbeReloadActiveVBProject", _
     cADDIN_CODE_NAME, _
     pop
-    
-  vbeAddCommandBarItem _
-    "Experiment", _
-    "vbeExperimental", _
+  
+  ' Standalone buttons:
+  
+  With vbeAddCommandBarItem( _
+    "Copy Project Path to Clipboard", _
+    "vbeCopyPathToClipboard", _
     cADDIN_CODE_NAME, _
-    pop
-
+    cmdBar)
+    
+    .FaceId = 22
+    .Style = msoButtonIcon
+  End With
+  
   cmdBar.Visible = True
 End Sub
 
 Private Sub Remove_AddinMenu()
   vbeDeleteCustomMenu cADDIN_CODE_NAME
 End Sub
+
+
 

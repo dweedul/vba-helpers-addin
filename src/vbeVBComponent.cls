@@ -7,6 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+' #RelativePath = src
+
 Option Explicit
 
 '-----------------------------------------------------------------
@@ -21,7 +23,8 @@ Option Explicit
 Private m_Options As Collection
 Private m_Index As Long ' index in the collection
 Private m_ModuleName As String ' name of the Code Module
-Private m_ProjectName As String ' name of the Project
+Private m_Project As VBProject ' name of the Project
+Private m_ComponentType As vbext_ComponentType
 
 Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked for options
 
@@ -31,15 +34,18 @@ Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked fo
 Public Property Get Index() As Long: Index = m_Index: End Property
 Public Property Let Index(Index As Long): m_Index = Index: End Property
 
-Public Property Get ProjectName() As String: ProjectName = m_ProjectName: End Property
-Public Property Let ProjectName(ProjectName As String): m_ProjectName = ProjectName: End Property
+Public Property Get Project() As VBProject: Set Project = m_Project: End Property
+Public Property Set Project(Project As VBProject): Set m_Project = Project: End Property
 
 Public Property Get ModuleName() As String: ModuleName = m_ModuleName: End Property
 Public Property Let ModuleName(ModuleName As String): m_ModuleName = ModuleName: End Property
 
+Public Property Get ComponentType() As vbext_ComponentType: ComponentType = m_ComponentType: End Property
+Public Property Let ComponentType(ComponentType As vbext_ComponentType): m_ComponentType = ComponentType: End Property
+
 Public Property Get VBComponent() As Object
   On Error GoTo Local_Error
-  Set VBComponent = Application.VBE.VBProjects(ProjectName).VBComponents(ModuleName)
+  Set VBComponent = Me.Project.VBComponents(ModuleName)
   
   On Error GoTo 0
   Exit Property
@@ -49,7 +55,8 @@ Local_Error:
 End Property
 Public Property Set VBComponent(VBComponent As Object)
   Me.ModuleName = VBComponent.Name
-  Me.ProjectName = VBComponent.Collection.Parent.Name
+  Set Me.Project = VBComponent.Collection.Parent
+  Me.ComponentType = VBComponent.Type
 End Property
 
 Public Property Get IsEmpty() As Boolean

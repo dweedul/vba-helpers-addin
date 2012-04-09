@@ -1,6 +1,6 @@
 # ignore web info
 *.url
-_links
+.links
 
 # ignore certain excel filetypes
 *.frx
@@ -9,3 +9,4 @@ _links
 
 # ignore test files
 test*
+experiment*

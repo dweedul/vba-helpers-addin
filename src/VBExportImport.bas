@@ -1,4 +1,5 @@
 Attribute VB_Name = "VBExportImport"
+' #RelativePath = src
 ' #NoExport
 ' #NoRefresh
 ' #NoList

@@ -1,4 +1,6 @@
 Attribute VB_Name = "vbeCommandBarHelpers"
+' #RelativePath = src
+
 Option Explicit
 Option Private Module
 
