@@ -34,8 +34,8 @@ Private m_Parsed As Boolean ' flag to tell if the CodeModule has been checked fo
 Public Property Get Index() As Long: Index = m_Index: End Property
 Public Property Let Index(Index As Long): m_Index = Index: End Property
 
-Public Property Get Project() As VBProject: Project = m_Project: End Property
-Public Property Set Project(Project As VBProject): m_Project = Project: End Property
+Public Property Get Project() As VBProject: Set Project = m_Project: End Property
+Public Property Set Project(Project As VBProject): Set m_Project = Project: End Property
 
 Public Property Get ModuleName() As String: ModuleName = m_ModuleName: End Property
 Public Property Let ModuleName(ModuleName As String): m_ModuleName = ModuleName: End Property
@@ -45,7 +45,7 @@ Public Property Let ComponentType(ComponentType As vbext_ComponentType): m_Compo
 
 Public Property Get VBComponent() As Object
   On Error GoTo Local_Error
-  Set VBComponent = Project.VBComponents(ModuleName)
+  Set VBComponent = Me.Project.VBComponents(ModuleName)
   
   On Error GoTo 0
   Exit Property
@@ -55,7 +55,7 @@ Local_Error:
 End Property
 Public Property Set VBComponent(VBComponent As Object)
   Me.ModuleName = VBComponent.Name
-  Me.Project = VBComponent.Collection.Parent
+  Set Me.Project = VBComponent.Collection.Parent
   Me.ComponentType = VBComponent.Type
 End Property
 
