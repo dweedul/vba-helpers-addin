@@ -1,5 +1,5 @@
 Attribute VB_Name = "AddinConstants"
-'#RelativePath = vba
+' #RelativePath = src
 
 Option Explicit
 Option Private Module

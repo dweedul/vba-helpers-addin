@@ -1,5 +1,6 @@
 Attribute VB_Name = "RibbonX"
 ' #RelativePath = src
+
 Option Explicit
 
 Public rbx As IRibbonUI
