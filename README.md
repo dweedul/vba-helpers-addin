@@ -23,3 +23,9 @@ I forget to open my console into the correct folder so often that copying the pa
 ### What the hell am I selecting button ###
 On the developer tab, there is a new button. When pressed, this button will display the name of the class of the object that is currently selected.
 For example, select the axis on a graph and press the button. The button will say 'Axis'
+
+Usage
+-----
+Goto the [downloads](https://github.com/dweedul/VBEHelpersAddin/downloads) and use it!
+
+If you want to peek at the code inside, the password is `qwerty`.  I do this so that it won't show me all that code when I'm working on other code.
