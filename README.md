@@ -1,26 +1,25 @@
+VBE Helper Addin
+================
+An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
+Features
+--------
+__Exporting code__
+Export all modules and classes or just one.
 
-__Issues__
+__Importing code__
+Imports all modules and classes or just one.
 
-  * [feature] reloading should also set project references and project properties (e.g. name, compile switches)
-  * [feature] inject timer code at #timer comments (#timer name/comment)
-  * [feature] reloads should follow paths
-  * [feature] implement absolute path export/import
-  * [feature] dropdown for #codes
-  * [feature] auto add of watched vars for a given project: #watch variable context etc
-  * [feature] find grouped code
-    - use the {{#section}} {{/section}} start and end tags (like {{moustache}}) (maybe get rid of the moustaches?)
-  * [feature] build PowerPoint version
-  * [feature] comment/uncomment all debug.* lines
-  * [feature] build a template dropdown that injects snippets and classes.
+The export and import are controlled by the use of `#commands` in the comments at the top of a code moduel.
 
-__Closed Issues__
+* `#NoExport` - file is not exported. I use this in a lot of quick testing code.
+* `#NoRefresh` - file will not be refreshed, even if the command if given
+* `#RelativePath` - path to save to/load from. This is relative to the current workbook's file location.
+* `#AbsolutePath` - path to save to/load from. __Not yet implemented__
 
-  * [complete] export all in this project
-  * [complete] refresh all in this project
-  * [complete] export selected module
-  * [complete] Add a button to copy to the clipboard the path the current project/file.
-  * [removed]  VBScript to refresh all in this project
-  * [removed]  aggregate @TODOs in a tree like on the MZTools summarize functions -> can use MZTools Find function for this
-  * [bug] refresh selected module - this does not add the file back, may need to close the workbook first...
-    - use `Application.OnTime Now(), ThisWorkbook.Name & "!ImportFiles"`? (see SourceTools.xla!ImportFiles for example)
+__Copy path the clipboard button__
+I forget to open my console into the correct folder so often that copying the path to the clipboard seemed like a good idea.
+
+__What the hell am I selecting button__
+On the developer tab, there is a new button. When pressed, this button will display the name of the class of the object that is currently selected.
+For example, select the axis on a graph and press the button. The button will say 'Axis'
