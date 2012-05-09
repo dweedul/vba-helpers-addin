@@ -1,31 +1,35 @@
-VBE Helper Addin
-================
+# VBE Helper Addin
 An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
-Features
---------
-### Exporting code ###
-Export all modules and classes or just one.
+## In the VBE
 
-### Importing code ###
-Imports all modules and classes or just one.
+A new toolbar shows up with the following features.
 
-The export and import are controlled by the use of `#commands` in the comments at the top of a code moduel.
+### Exporting and Importing Code
+
+Four buttons here:
+* Export active module.
+* Export active project.
+* Reload active module.
+* Reload active project.
+
+The export and import are controlled by the use of `#commands` in the comments at the top of a code module.
 
 * `#NoExport` - file is not exported. I use this in a lot of quick testing code.
 * `#NoRefresh` - file will not be refreshed, even if the command if given
 * `#RelativePath` - path to save to/load from. This is relative to the current workbook's file location.
-* `#AbsolutePath` - path to save to/load from. __Not yet implemented__
 
-### Copy path the clipboard button ###
+### Copy path the clipboard button
 I forget to open my console into the correct folder so often that copying the path to the clipboard seemed like a good idea.
 
-### What the hell am I selecting button ###
-On the developer tab, there is a new button. When pressed, this button will display the name of the class of the object that is currently selected.
-For example, select the axis on a graph and press the button. The button will say 'Axis'
+## In the Main Excel Window
 
-Usage
------
+The following buttons are located in a new group on the Developer tab:
+
+### Class name of current selection.
+This button will change its name to the class type of the selected object. (e.g. if a chart axis is selected, it will say "Axis")
+
+## Usage
 Goto the [downloads](https://github.com/dweedul/VBEHelpersAddin/downloads) and use it!
 
 If you want to peek at the code inside, the password is `qwerty`.  I do this so that it won't show me all that code when I'm working on other code.
