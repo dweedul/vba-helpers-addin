@@ -1,4 +1,6 @@
 Attribute VB_Name = "vbeTests"
+'#RelativePath = src
+
 Option Explicit
 
 Private Function testAll()
@@ -55,4 +57,10 @@ Private Function testOptionClass()
   test = test And opt.default = 0
   
   testOptionClass = test
+End Function
+
+Private Function testOptionParser()
+  Dim parser As vbeOptionParser
+  
+  
 End Function
