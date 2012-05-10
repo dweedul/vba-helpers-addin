@@ -1,0 +1,14 @@
+# ignore web info
+*.url
+.links
+
+# ignore certain excel filetypes
+*.frx
+*.xls*
+*.xla*
+
+# ignore test files
+test*
+experiment*
+
+# ignore sensitive files
