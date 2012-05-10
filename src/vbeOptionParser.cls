@@ -8,10 +8,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '#RelativePath = src
-Option Explicit
 
 ' OptionParsers check a string for specific phrases
 ' and stores them for use later
+
+Option Explicit
 
 Private mOptions As Dictionary
 
@@ -56,6 +57,6 @@ Public Function parse()
   ' if the option is a boolean,
   ' treat its presence as a toggle from the default
   If opt.typename = cBOOLEAN Then
-    opt.Value = Not opt.default
+    opt.value = Not opt.default
   End If
 End Function
