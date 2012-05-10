@@ -39,6 +39,7 @@ End Property
 Public Property Get default() As Variant
   If Not IsEmpty(default) Then m_default = getEmptyDefault
   default = m_default
+  value = m_default
 End Property
 
 ' Store the default value.
@@ -49,6 +50,8 @@ Public Property Let default(default As Variant)
   Else
     m_default = getEmptyDefault()
   End If
+  
+  value = m_default
 End Property
 
 Public Property Get typename() As String: typename = m_typename: End Property
@@ -73,6 +76,11 @@ End Property
 ' The name and the expected args are derived from the optionString
 Public Property Get name() As String: name = m_name: End Property
 Public Property Get expectedArgs() As Variant: expectedArgs = m_expectedArgs: End Property
+
+' Get the number of expected arguments for this option
+Public Property Get expectedArgsCount() As Long
+  expectedArgsCount = UBound(m_expectedArgs) - LBound(m_expectedArgs) + 1
+End Property
 
 ' Parse the option string for name and expected args
 '
