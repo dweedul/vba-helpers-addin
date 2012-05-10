@@ -9,11 +9,15 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '#RelativePath = src
 
+' The option is the atomic nugget used in the OptionParser.
+' This will be where the information about each option is stored.
+
 Option Explicit
 
 Private m_optionString As String
 Private m_typename
 Private m_default As Variant
+Public value As Variant
 
 ' these are derived from the optionString
 Private m_name As String
@@ -30,13 +34,15 @@ Public Property Let optionString(optionString As String)
   parseOptionString optionString
 End Property
 
-' Get the default value.  If it is currently empty, set it to the appropriate default.
+' Get the default value.
+' If it is currently empty, set it to the appropriate default.
 Public Property Get default() As Variant
   If Not IsEmpty(default) Then m_default = getEmptyDefault
   default = m_default
 End Property
 
-' Store the default value. If the supplied value is Empty, then store an appropriate default.
+' Store the default value.
+' If the supplied value is Empty, then store an appropriate default.
 Public Property Let default(default As Variant)
   If Not IsEmpty(default) Then
     m_default = default
@@ -68,7 +74,7 @@ End Property
 Public Property Get name() As String: name = m_name: End Property
 Public Property Get expectedArgs() As Variant: expectedArgs = m_expectedArgs: End Property
 
-' This will parse the option string for name and expected args
+' Parse the option string for name and expected args
 '
 ' Example:
 '
