@@ -64,6 +64,7 @@ Private Function testOptionParser()
   Dim test As Boolean: test = True
   Dim parser As New vbeOptionParser, options As Dictionary
   Dim testString As String
+  Dim o As Object
   
   testString = "'# boolOption" & vbCrLf & _
                "blah bloo blah" & vbCrLf & _
@@ -81,11 +82,11 @@ Private Function testOptionParser()
   Set options = parser.parse(testString)
   
   ' ## Test the options hash yields correct results
-  test = options("boolOption").value = True
-  test = test And options("strOption").value = "arg1"
+  test = options("boolOption") = True
+  test = test And options("strOption") = "arg1"
   test = test And options("strOption").args(2) = "arg2"
-  test = test And options("numOption").value = 10
-  test = test And options("pathOption").value = "C:\path to file"
+  test = test And options("numOption") = 10
+  test = test And options("pathOption") = "C:\path to file"
   
   testOptionParser = test
 End Function
