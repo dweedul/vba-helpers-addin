@@ -41,6 +41,9 @@ End Property
 ' Return the options hash
 Public Property Get options() As Dictionary: Set options = m_OptionParser.options: End Property
 
+' Return the module's parent project
+Public Property Get project() As VBProject: Set project = m_baseObject.Collection.Parent: End Property
+
 ' ## Constructor/Destructor
 
 ' Instantiate objects and set defaults

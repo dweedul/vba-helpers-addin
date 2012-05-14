@@ -17,5 +17,8 @@ Public Function testVBComponent() As Boolean
   test = comp.options("no-reload") = True
   test = test And comp.options("no-export") = True
   test = test And comp.options("relative-path") = "test"
+  
+  ' ## test project property
+  test = test And comp.project.name = Application.VBE.ActiveVBProject.name
 End Function
 
