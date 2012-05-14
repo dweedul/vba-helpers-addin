@@ -14,14 +14,15 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+' private storage variables
+' check out the appropriate get/let|set for more info
+Private m_args As Collection
+Private m_default As Variant
+Private m_expectedArgs As Variant
+Private m_name As String
 Private m_optionString As String
 Private m_typename
-Private m_default As Variant
-Public value As Variant
-
-' these are derived from the optionString
-Private m_name As String
-Private m_expectedArgs As Variant
+Private m_value As Variant
 
 ' some important constants
 ' the values here MUST match those in the vbeOptionParser class
@@ -29,17 +30,29 @@ Const cBOOLEAN As String = "bool"
 Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
-Public Property Get optionString() As String: optionString = m_optionString: End Property
-Public Property Let optionString(optionString As String)
-  parseOptionString optionString
+
+Private Sub Class_Initialize()
+  Set m_args = New Collection
+End Sub
+
+' ## Properties
+
+Public Property Get args() As Collection: Set args = m_args: End Property
+
+' store and validate the args provided
+Public Property Set args(args As Collection)
+  Set m_args = args
+  
+  ' TODO: validate the number of args matches the expected args
+  ' TODO: validate the args based on typename
 End Property
 
 ' Get the default value.
 ' If it is currently empty, set it to the appropriate default.
 Public Property Get default() As Variant
   If Not IsEmpty(default) Then m_default = getEmptyDefault
+  
   default = m_default
-  value = m_default
 End Property
 
 ' Store the default value.
@@ -50,8 +63,22 @@ Public Property Let default(default As Variant)
   Else
     m_default = getEmptyDefault()
   End If
-  
-  value = m_default
+End Property
+
+' The expected args are derived from the optionString
+Public Property Get expectedArgs() As Variant: expectedArgs = m_expectedArgs: End Property
+
+' Get the number of expected arguments for this option
+Public Property Get expectedArgsCount() As Long
+  expectedArgsCount = UBound(m_expectedArgs) - LBound(m_expectedArgs) + 1
+End Property
+
+' The name is derived from the optionString.
+Public Property Get name() As String: name = m_name: End Property
+
+Public Property Get optionString() As String: optionString = m_optionString: End Property
+Public Property Let optionString(optionString As String)
+  parseOptionString optionString
 End Property
 
 Public Property Get typename() As String: typename = m_typename: End Property
@@ -61,26 +88,31 @@ Public Property Let typename(typename As String)
   tmp = LCase(typename)
   
   ' Validate the typename before storing
-  If tmp <> cBOOLEAN And tmp <> cSTRING And tmp <> cNUMBER Then GoTo ErrorHandler
+  If tmp <> cBOOLEAN And tmp <> cSTRING And tmp <> cNUMBER Then GoTo errorHandler
     
   m_typename = tmp
   
   On Error GoTo 0
   Exit Property
   
-ErrorHandler:
+errorHandler:
   Err.Raise 9999, "vbeOptionParser::getEmptyDefault", _
             "The typename is not defined or is not one of the following: " & cBOOLEAN & ", " & cSTRING & ", or " & cNUMBER
 End Property
 
-' The name and the expected args are derived from the optionString
-Public Property Get name() As String: name = m_name: End Property
-Public Property Get expectedArgs() As Variant: expectedArgs = m_expectedArgs: End Property
-
-' Get the number of expected arguments for this option
-Public Property Get expectedArgsCount() As Long
-  expectedArgsCount = UBound(m_expectedArgs) - LBound(m_expectedArgs) + 1
+' Get the value of the option.
+'
+' Return the stored value, or the default value.
+Public Property Get value() As Variant
+  If IsEmpty(m_value) Then
+    value = Me.default
+  Else
+    value = m_value
+  End If
 End Property
+
+' Store the value.
+Public Property Let value(value As Variant): m_value = value: End Property
 
 ' Parse the option string for name and expected args
 '
@@ -118,7 +150,9 @@ Private Sub parseOptionString(str As String)
   End If
 End Sub
 
-' Store an appropriate default for each accepted type
+' Get an appropriate default for each accepted type
+'
+' Returns a type-appropriate default or raises an error.
 Private Function getEmptyDefault() As Variant
   Select Case Me.typename
     Case cSTRING
@@ -128,13 +162,13 @@ Private Function getEmptyDefault() As Variant
     Case cNUMBER
       getEmptyDefault = 0
     Case Else
-      GoTo ErrorHandler
+      GoTo errorHandler
   End Select ' Me.typename
   
   On Error GoTo 0
   Exit Function
   
-ErrorHandler:
+errorHandler:
   Err.Raise 9999, "vbeOptionParser::getEmptyDefault", _
             "The typename is not defined or is not one of the following: " & cBOOLEAN & ", " & cSTRING & ", or " & cNUMBER
 End Function

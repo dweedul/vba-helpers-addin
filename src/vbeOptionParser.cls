@@ -12,9 +12,14 @@ Attribute VB_Exposed = False
 ' OptionParsers check a string for specific phrases
 ' and stores them for use later
 
+' requires vbeOption
+
 Option Explicit
 
-Private mOptions As Dictionary
+Private m_Options As Dictionary
+
+' The token to look for within the parsed string
+Public optionToken As String
 
 ' some important constants
 ' the values here MUST match those in the vbeOption class
@@ -23,11 +28,14 @@ Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
 ' Expose the options hash
-Public Property Get Options() As Dictionary: Set Options = mOptions: End Property
+Public Property Get options() As Dictionary: Set options = m_Options: End Property
 
 ' Set defaults
 Private Sub Class_Initialize()
-  Set mOptions = New Dictionary
+  Set m_Options = New Dictionary
+  
+  ' set defaults, these can be overwritten
+  optionToken = "'#"
 End Sub
 
 ' Add a new option to the hash
@@ -37,7 +45,7 @@ End Sub
 ' default      - a default value. Defaults are set based on the typename
 Public Function addOption( _
                 optionString As String, _
-                Optional typename As String = "boolean", _
+                Optional typename As String = cBOOLEAN, _
                 Optional default As Variant = Empty) _
                 As Object
   
@@ -48,15 +56,113 @@ Public Function addOption( _
   newOption.default = default
   
   ' add the new command to the master collection
-  mOptions.Add newOption.name, newOption
+  m_Options.Add newOption.name, newOption
 End Function
 
-Public Function parse()
+' Parse the given string for lines starting with the optionToken
+'
+' str - the string to parse
+'
+' Returns the options hash for the given string
+Public Function parse( _
+                  searchString As String) _
+                  As Dictionary
+  Dim buf As String, optName As String
   Dim opt As vbeOption
+  Dim re As New RegExp, optionLines As MatchCollection, optionLine As Match
+  Dim args As MatchCollection, arg As Match
+  Dim i As Long, REGEX_OPTION_LINE As String
   
-  ' if the option is a boolean,
-  ' treat its presence as a toggle from the default
-  If opt.typename = cBOOLEAN Then
-    opt.value = Not opt.default
-  End If
+  Const cSPACE As String = " "
+  REGEX_OPTION_LINE = optionToken & "\s*([\\\.\[\]\(\)\w "":@#$%&-]*)"
+  
+  ' find all the lines that begin with the optionToken
+  re.Pattern = REGEX_OPTION_LINE & "[\n\f\r]+" & "|" & REGEX_OPTION_LINE & "$"
+  re.Global = True
+  re.IgnoreCase = True
+  Set optionLines = re.Execute(searchString)
+  
+  ' loop through the option lines
+  For Each optionLine In optionLines
+    buf = Submatch(optionLine)
+    
+    ' get the first word in the line,
+    ' that will be the option name
+    optName = Trim(Left(buf, InStr(buf, cSPACE)))
+    If optName = vbNullString Then optName = buf
+    
+    ' look up the option name in the options hash
+    ' if it exists, perform the appropriate action
+    If m_Options.Exists(optName) Then
+      Set opt = m_Options(optName)
+      
+      ' booleans are flags whose presence toggles the value
+      ' to the opposite of the default value.
+      If opt.typename = cBOOLEAN Then opt.value = Not opt.default
+      
+      ' The number and string option types will have at least one argument.
+      ' The first argument will be stored as the value for the option.
+      ' The argument list is a collection of strings
+      If opt.typename = cSTRING Or opt.typename = cNUMBER Then
+        Set opt.args = parseArgs(buf)
+        opt.value = opt.args(1)
+      End If
+      
+    End If
+  Next ' optionLine
+
+  Set parse = m_Options
+End Function
+
+' Parse the given option line for arguments.
+'
+' optionLine - the String with the argument information
+'
+' Returns a collection string arguments
+Private Function parseArgs( _
+                   optionLine As String) _
+                   As Variant
+  Dim arr As Collection: Set arr = New Collection
+  Dim args As MatchCollection, arg As Match
+  
+  On Error GoTo errorHandler
+  
+  Const REGEX_DOUBLE_QUOTED_STRING As String = "\s+""([^""].*)"""
+  Const REGEX_SPACE_WRAPPED_STRING As String = "\s+(\w+)\b"
+  
+  With New RegExp
+    .Global = True
+    .IgnoreCase = True
+    .Pattern = REGEX_DOUBLE_QUOTED_STRING & "|" & REGEX_SPACE_WRAPPED_STRING
+    Set args = .Execute(optionLine)
+  End With
+  
+  ' store the args
+  For Each arg In args
+    arr.Add Submatch(arg)
+  Next ' arg
+  
+  Set parseArgs = arr
+  On Error GoTo 0
+  Exit Function
+  
+errorHandler:
+  parseArgs = New Collection
+End Function
+        
+' Search the match object for the first non-empty submatch
+' This is to correct the bug that occurs when only one submatch should
+' be found, but mulitples are returned.
+' All but one should really be empty.
+
+' Return the value of the submatch as a string
+Private Function Submatch(m As Match) As String
+  Dim i As Long
+  
+  For i = 0 To m.SubMatches.Count - 1
+    If Not IsEmpty(m.SubMatches(i)) Then
+      Submatch = m.SubMatches(i)
+      Exit Function
+    End If
+  Next ' s
 End Function
