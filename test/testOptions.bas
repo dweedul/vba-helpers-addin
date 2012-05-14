@@ -1,16 +1,7 @@
-Attribute VB_Name = "vbeTests"
-'#RelativePath = src
+Attribute VB_Name = "testOptions"
+'#RelativePath = test
 
 Option Explicit
-
-Public Sub testAll()
-  Dim test As Boolean: test = True
-  
-  test = testOptionClass
-  test = test And testOptionParser
-  
-  Debug.Print test
-End Sub
 
 Private Function testOptionClass()
   Dim test As Boolean: test = True
