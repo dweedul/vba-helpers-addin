@@ -12,9 +12,9 @@ Attribute VB_Exposed = False
 ' OptionParsers check a string for specific phrases
 ' and stores them for use later
 
-' requires vbeOption
-' references "Microsoft VBScript Regular Expressions 5.5"
-' references "Microsoft Scripting Runtime"
+'# requires vbeOption
+'# references "Microsoft VBScript Regular Expressions 5.5"
+'# references "Microsoft Scripting Runtime"
 
 Option Explicit
 
