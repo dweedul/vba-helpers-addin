@@ -13,6 +13,8 @@ Attribute VB_Exposed = False
 ' and stores them for use later
 
 ' requires vbeOption
+' references "Microsoft VBScript Regular Expressions 5.5"
+' references "Microsoft Scripting Runtime"
 
 Option Explicit
 
