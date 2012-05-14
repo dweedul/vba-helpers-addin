@@ -33,3 +33,7 @@ This button will change its name to the class type of the selected object. (e.g.
 Goto the [downloads](https://github.com/dweedul/VBEHelpersAddin/downloads) and use it!
 
 If you want to peek at the code inside, the password is `qwerty`.  I do this so that it won't show me all that code when I'm working on other code.
+
+## ideas
+* multiline option parsing: for documentation, etc
+* array options: for references and requires
