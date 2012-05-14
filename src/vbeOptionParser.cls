@@ -166,3 +166,11 @@ Private Function Submatch(m As Match) As String
     End If
   Next ' s
 End Function
+
+' Return a vbeOption item from the dictionary
+'
+' the VB_UserMemId = 0 sets this as the default method of the class
+Function Item(key As Variant) As vbeOption
+Attribute Item.VB_UserMemId = 0
+  Set Item = m_Options.Item(key)
+End Function
