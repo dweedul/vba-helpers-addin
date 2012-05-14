@@ -14,15 +14,15 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+' private storage variables
+' check out the appropriate get/let|set for more info
+Private m_args As Collection
+Private m_default As Variant
+Private m_expectedArgs As Variant
+Private m_name As String
 Private m_optionString As String
 Private m_typename
-Private m_default As Variant
-Public value As Variant
-Private m_args As Variant
-
-' these are derived from the optionString
-Private m_name As String
-Private m_expectedArgs As Variant
+Private m_value As Variant
 
 ' some important constants
 ' the values here MUST match those in the vbeOptionParser class
@@ -31,11 +31,17 @@ Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
 
-Public Property Get args() As Variant: args = m_args: End Property
+Private Sub Class_Initialize()
+  Set m_args = New Collection
+End Sub
+
+' ## Properties
+
+Public Property Get args() As Collection: Set args = m_args: End Property
 
 ' store and validate the args provided
-Public Property Let args(args As Variant)
-  m_args = args
+Public Property Set args(args As Collection)
+  Set m_args = args
   
   ' TODO: validate the number of args matches the expected args
   ' TODO: validate the args based on typename
@@ -45,8 +51,8 @@ End Property
 ' If it is currently empty, set it to the appropriate default.
 Public Property Get default() As Variant
   If Not IsEmpty(default) Then m_default = getEmptyDefault
+  
   default = m_default
-  value = m_default
 End Property
 
 ' Store the default value.
@@ -57,8 +63,6 @@ Public Property Let default(default As Variant)
   Else
     m_default = getEmptyDefault()
   End If
-  
-  value = m_default
 End Property
 
 ' The expected args are derived from the optionString
@@ -96,6 +100,20 @@ errorHandler:
             "The typename is not defined or is not one of the following: " & cBOOLEAN & ", " & cSTRING & ", or " & cNUMBER
 End Property
 
+' Get the value of the option.
+'
+' Return the stored value, or the default value.
+Public Property Get value() As Variant
+  If IsEmpty(m_value) Then
+    value = Me.default
+  Else
+    value = m_value
+  End If
+End Property
+
+' Store the value.
+Public Property Let value(value As Variant): m_value = value: End Property
+
 ' Parse the option string for name and expected args
 '
 ' Example:
@@ -132,7 +150,9 @@ Private Sub parseOptionString(str As String)
   End If
 End Sub
 
-' Store an appropriate default for each accepted type
+' Get an appropriate default for each accepted type
+'
+' Returns a type-appropriate default or raises an error.
 Private Function getEmptyDefault() As Variant
   Select Case Me.typename
     Case cSTRING
