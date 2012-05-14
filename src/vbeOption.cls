@@ -30,6 +30,7 @@ Const cBOOLEAN As String = "bool"
 Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
+
 Private Sub Class_Initialize()
   Set m_args = New Collection
 End Sub
@@ -102,9 +103,7 @@ End Property
 ' Get the value of the option.
 '
 ' Return the stored value, or the default value.
-' NOTE: VB_UserMemId = 0 sets this as the default method of the class
 Public Property Get value() As Variant
-Attribute Item.VB_UserMemId = 0
   If IsEmpty(m_value) Then
     value = Me.default
   Else

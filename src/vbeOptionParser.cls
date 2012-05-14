@@ -174,12 +174,3 @@ Function Item(key As Variant) As vbeOption
 Attribute Item.VB_UserMemId = 0
   Set Item = m_Options.Item(key)
 End Function
-
-' Implement support for enumeration (For Each)
-' 
-' NOTE: VB_UserMemId = -4 sets this as the NewEnum for the class.
-Function NewEnum() As IUnknown
-Attribute NewEnum.VB_UserMemId = -4
-  ' delegate to the private collection
-  Set NewEnum = m_Options.[_NewEnum]
-End Function
