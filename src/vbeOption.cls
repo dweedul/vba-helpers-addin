@@ -105,7 +105,7 @@ End Property
 ' Return the stored value, or the default value.
 ' NOTE: VB_UserMemId = 0 sets this as the default method of the class
 Public Property Get value() As Variant
-Attribute Item.VB_UserMemId = 0
+Attribute value.VB_UserMemId = 0
   If IsEmpty(m_value) Then
     value = Me.default
   Else
