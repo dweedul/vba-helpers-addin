@@ -17,6 +17,8 @@ Option Explicit
 
 Private m_baseObject As VBComponent
 
+' ## Properties
+
 ' Get the base component stored in this object.
 '
 ' Default member of the class
