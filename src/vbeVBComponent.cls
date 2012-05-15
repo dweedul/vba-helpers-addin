@@ -77,6 +77,42 @@ Private Sub Class_Initialize()
   buildOptionSet
 End Sub
 
+' ## Import and Export methods
+
+' Export this code module
+'
+' overwriteExisting - should the export overwrite an existing copy
+'                     defaults to TRUE
+' overrideNoExport  - should the export occur in spite of the no-export option
+'                     defaults to FALSE
+'
+' Returns the current module for chaining.
+Public Function export( _
+                  Optional overwriteExisting As Boolean = True, _
+                  Optional overrideNoExport As Boolean = False) _
+                  As vbeVBComponent
+  
+  ' handle the no-export option
+  If Me.options("no-export") And Not overrideNoExport Then GoTo errorHandler
+  
+  ' check for existing file and overwrite as required
+  If fso.FileExists(Me.path) And Not overwriteExisting Then GoTo errorHandler
+    
+  ' create the parent folder if it does not exist
+  With fso
+    If Not .FolderExists(.GetParentFolderName(Me.path)) Then
+      .CreateFolder .GetParentFolderName(Me.path)
+    End If
+  End With ' fso
+  
+  ' export the component
+  m_baseObject.export Me.path
+  
+errorHandler:
+  ' support chaining by returning Me
+  Set export = Me
+End Function
+
 ' ## Private Members
 
 ' Build the option set for all Components

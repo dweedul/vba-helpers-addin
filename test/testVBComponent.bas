@@ -2,7 +2,6 @@ Attribute VB_Name = "testVBComponent"
 '#RelativePath = test
 
 '# no-reload
-'# no-export
 '# relative-path test
 
 ' These tests will use this code module to test for options.
@@ -29,5 +28,8 @@ Public Function testVBComponent() As Boolean
   test = test And comp.project.name = PROJECT_NAME
   test = test And comp.filename = MODULE_NAME & ".bas"
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
+  
+  ' ## test export and import
+  comp.export
 End Function
 
