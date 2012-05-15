@@ -40,8 +40,19 @@ Public Property Set baseObject(baseObject As VBComponent)
   
   ' run the option parser as soon as the baseObject is set
   With m_baseObject.CodeModule
-    m_OptionParser.parse .Lines(1, .CountOfLines)
+    m_OptionParser.parse Me.code
   End With ' codeModule
+End Property
+
+' Get the code in the component as a string
+Public Property Get code() As String
+  With m_baseObject.CodeModule
+    If .CountOfLines = 0 Then
+      code = vbNullString
+    Else
+      code = .Lines(1, .CountOfLines)
+    End If
+  End With ' CodeModule
 End Property
 
 ' Return the filename based on the component type and name
@@ -93,13 +104,16 @@ Public Function export( _
                   Optional overwriteExisting As Boolean = True, _
                   Optional overrideNoExport As Boolean = False) _
                   As vbeVBComponent
-  
+                                     
   ' handle the no-export option
   If Me.options("no-export") And Not overrideNoExport Then GoTo errorHandler
   
   ' check for existing file and overwrite as required
   If fso.FileExists(Me.path) And Not overwriteExisting Then GoTo errorHandler
-    
+  
+  ' Do not export empty components.  That would be silly
+  If Len(Trim(Me.code)) = 0 Then GoTo errorHandler
+  
   ' create the parent folder if it does not exist
   With fso
     If Not .FolderExists(.GetParentFolderName(Me.path)) Then
@@ -115,15 +129,24 @@ errorHandler:
   Set export = Me
 End Function
 
+' Reload the component from the filesystem
+'
+' warnUser         - let the user know that there will be an overwrite
+'                    defaults to TRUE
+' overrideNoImport - reload regardless of the no-reload option
+'                    defaluts to FALSE
+'
+' Returns Me for chaining
 Public Function reload( _
                   Optional warnUser As Boolean = True, _
-                  Optional overrideNoImport As Boolean = False) _
+                  Optional overrideNoReload As Boolean = False, _
+                  Optional shouldActivate As Boolean = True) _
                   As vbeVBComponent
                     
   Dim resp As VbMsgBoxResult
                     
   ' handle the no-import option
-  If Me.options("no-import") And Not overrideNoImport Then GoTo errorHandler
+  If Me.options("no-reload") And Not overrideNoReload Then GoTo errorHandler
   
   ' warn the user before importing
   If warnUser Then
@@ -134,21 +157,20 @@ Public Function reload( _
   
   ' perform the import
   If resp = vbOK Then
-    ' register the current module in the queue
-    ThisWorkbook.importQueue.Add Me.project.name & IMPORT_DELIMITER & _
-                                 Me.baseObject.name & IMPORT_DELIMITER & _
-                                 Me.path
     
-    ' schedule the importer to fire after the code runs
-    Application.OnTime Now(), ThisWorkbook.name & "!'importQueuedComponents'"
+    ' schedule the import to occur after the current procedure stack completes
+    Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
+                                Me.project.name & """, """ & _
+                                Me.baseObject.name & """, """ & _
+                                Me.path & """, """ & _
+                                shouldActivate & """'"
+                                
   End If
-    
-                  
+                      
 errorHandler:
   'support chaining by returning ME
   Set reload = Me
 End Function
-
 
 ' ## Private Members
 

@@ -42,6 +42,6 @@ Public Function testVBComponent() As Boolean
   txt.Close
   
   ' reload the file
-  comp.reload
+  comp.reload warnUser:=False, shouldActivate:=True
 End Function
 
