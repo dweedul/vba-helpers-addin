@@ -13,11 +13,14 @@ Attribute VB_Exposed = False
 
 '# requires vbeOptionParser
 '# references "Microsoft Visual Basic for Applications Extensibility 5.3"
+'# references "Microsoft Scripting Runtime"
 
 Option Explicit
 
 Private m_baseObject As VBComponent
 Private m_OptionParser As vbeOptionParser
+
+Private fso As FileSystemObject
 
 ' ## Properties
 
@@ -39,8 +42,27 @@ Public Property Set baseObject(baseObject As VBComponent)
   End With ' codeModule
 End Property
 
+' Return the filename based on the component type and name
+Public Property Get filename()
+  filename = m_baseObject.name & extension
+End Property
+
 ' Return the options hash
 Public Property Get options() As Dictionary: Set options = m_OptionParser.options: End Property
+
+' Return the calculated path to the component
+Public Property Get path() As String
+  Dim basePath As String
+  
+  If Len(Me.options("absolute-path")) > 0 Then
+    path = Me.options("absolute-path")
+  Else
+    With fso
+      basePath = .BuildPath(.GetParentFolderName(project.filename), Me.options("relative-path"))
+      path = .BuildPath(basePath, Me.filename)
+    End With ' fso
+  End If
+End Property
 
 ' Return the module's parent project
 Public Property Get project() As VBProject: Set project = m_baseObject.Collection.Parent: End Property
@@ -50,6 +72,7 @@ Public Property Get project() As VBProject: Set project = m_baseObject.Collectio
 ' Instantiate objects and set defaults
 Private Sub Class_Initialize()
   Set m_OptionParser = New vbeOptionParser
+  Set fso = New FileSystemObject
   
   buildOptionSet
 End Sub
@@ -71,3 +94,18 @@ Private Sub buildOptionSet()
   ' from this path, relative to the parent workbook
   m_OptionParser.addOption "relative-path", typename:="string", default:=""
 End Sub
+
+Private Property Get extension() As String
+  Select Case m_baseObject.Type
+    Case vbext_ct_ClassModule
+        extension = ".cls"
+    Case vbext_ct_Document
+        extension = ".cls"
+    Case vbext_ct_MSForm
+        extension = ".frm"
+    Case vbext_ct_StdModule
+        extension = ".bas"
+    Case Else
+        extension = ".bas"
+  End Select
+End Property
