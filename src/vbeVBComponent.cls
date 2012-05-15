@@ -191,6 +191,18 @@ errorHandler:
   Set reload = Me
 End Function
 
+' Remove this component from it's project
+'
+' Return this
+Public Function remove() As vbeVBComponent
+  Me.project.VBComponents.remove m_baseObject
+  
+  m_baseObject = Nothing
+  
+  ' support chaining
+  Set remove = Me
+End Function
+
 ' ## Private Members
 
 ' Build the option set for all Components
