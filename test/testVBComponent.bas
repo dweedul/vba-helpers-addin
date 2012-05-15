@@ -16,7 +16,6 @@ Option Explicit
 Public Function testVBComponent() As Boolean
   Dim test As Boolean
   Dim comp As New vbeVBComponent
-  Dim fso As New FileSystemObject, txt As TextStream
   
   Set comp.baseObject = Application.VBE.VBProjects(PROJECT_NAME).VBComponents(MODULE_NAME)
   
@@ -31,9 +30,17 @@ Public Function testVBComponent() As Boolean
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
   
   ' ## test export and import
-  Set comp = New vbeVBComponent
-  Set comp.baseObject = Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
   
+End Function
+
+Public Sub testExportAndReload(component As VBComponent)
+  Dim comp As New vbeVBComponent
+  Dim fso As New FileSystemObject, txt As TextStream
+  
+  comp.baseObject = component
+    
   comp.export
   
   ' add some text
@@ -43,5 +50,4 @@ Public Function testVBComponent() As Boolean
   
   ' reload the file
   comp.reload warnUser:=False, shouldActivate:=True
-End Function
-
+End Sub

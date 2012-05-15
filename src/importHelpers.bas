@@ -24,19 +24,34 @@ Public Sub importFromFile( _
              Optional shouldActivate As Boolean = True)
   
   Dim p As VBProject:  Set p = Application.VBE.VBProjects(project)
-  Dim c As VBComponent
+  Dim c As New vbeVBComponent, tmp As New vbeVBComponent
   
   ' remove the component from the project if it exists
   If VBComponentExists(component, p) Then
-    Set c = p.VBComponents(component)
-    p.VBComponents.Remove c
+    Set c.baseObject = p.VBComponents(component)
+    
+    If c.baseObject.Type = vbext_ct_Document Then
+      c.clear
+      
+      ' import the component into a new object,
+      ' copy the tmp component's code into the old object
+      ' and then remove the tmp component
+      Set tmp.baseObject = p.VBComponents.import(path)
+      c.baseObject.CodeModule.InsertLines 1, tmp.code
+      tmp.remove: Set tmp = Nothing
+      
+    Else
+      c.remove
+      Set c.baseObject = p.VBComponents.import(path)
+    End If
+    
+  Else
+    ' import the component
+    Set c.baseObject = p.VBComponents.import(path)
   End If
   
-  ' import the component
-  Set c = p.VBComponents.import(path)
-  
   ' activate as required
-  If shouldActivate Then c.Activate
+  If shouldActivate Then c.activate
 End Sub
 
 ' Check for the existence of a vbcomponent
@@ -72,4 +87,5 @@ Private Function VBComponentExists( _
 errorHandler:
   VBComponentExists = False
 End Function
+
 
