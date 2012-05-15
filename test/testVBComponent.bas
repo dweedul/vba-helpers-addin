@@ -2,7 +2,6 @@ Attribute VB_Name = "testVBComponent"
 '#RelativePath = test
 
 '# no-reload
-'# no-export
 '# relative-path test
 
 ' These tests will use this code module to test for options.
@@ -29,5 +28,26 @@ Public Function testVBComponent() As Boolean
   test = test And comp.project.name = PROJECT_NAME
   test = test And comp.filename = MODULE_NAME & ".bas"
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
+  
+  ' ## test export and import
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
+  
 End Function
 
+Public Sub testExportAndReload(component As VBComponent)
+  Dim comp As New vbeVBComponent
+  Dim fso As New FileSystemObject, txt As TextStream
+  
+  comp.baseObject = component
+    
+  comp.export
+  
+  ' add some text
+  Set txt = fso.OpenTextFile(comp.path, ForAppending)
+  txt.WriteLine "' appended text"
+  txt.Close
+  
+  ' reload the file
+  comp.reload warnUser:=False, shouldActivate:=True
+End Sub
