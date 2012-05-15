@@ -90,7 +90,15 @@ Private Sub Class_Initialize()
   buildOptionSet
 End Sub
 
-' ## Export and Reload methods
+' ## Public methods
+
+' Activate this component
+'
+' Return this
+Public Function activate() As vbeVBComponent
+  Me.baseObject.activate
+  Set activate = Me
+End Function
 
 ' Export this code module
 '
