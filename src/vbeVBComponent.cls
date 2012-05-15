@@ -11,6 +11,7 @@ Attribute VB_Exposed = False
 
 ' This is the base class for the code module manipulations
 
+'# requires vbeOptionParser
 '# references "Microsoft Visual Basic for Applications Extensibility 5.3"
 
 Option Explicit
