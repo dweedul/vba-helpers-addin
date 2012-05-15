@@ -100,6 +100,17 @@ Public Function activate() As vbeVBComponent
   Set activate = Me
 End Function
 
+' Clear the code module
+'
+' Return this
+Public Function clear() As vbeVBComponent
+  With Me.baseObject.CodeModule
+    .DeleteLines 1, .CountOfLines
+  End With
+  
+  Set clear = Me
+End Function
+
 ' Export this code module
 '
 ' overwriteExisting - should the export overwrite an existing copy
