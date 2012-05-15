@@ -22,6 +22,8 @@ Private m_OptionParser As vbeOptionParser
 
 Private fso As FileSystemObject
 
+Const WARNING_IMPORT As String = "We're going to overwrite something!"
+
 ' ## Properties
 
 ' Get the base component stored in this object.
@@ -77,7 +79,7 @@ Private Sub Class_Initialize()
   buildOptionSet
 End Sub
 
-' ## Import and Export methods
+' ## Export and Reload methods
 
 ' Export this code module
 '
@@ -112,6 +114,41 @@ errorHandler:
   ' support chaining by returning Me
   Set export = Me
 End Function
+
+Public Function reload( _
+                  Optional warnUser As Boolean = True, _
+                  Optional overrideNoImport As Boolean = False) _
+                  As vbeVBComponent
+                    
+  Dim resp As VbMsgBoxResult
+                    
+  ' handle the no-import option
+  If Me.options("no-import") And Not overrideNoImport Then GoTo errorHandler
+  
+  ' warn the user before importing
+  If warnUser Then
+    resp = MsgBox(WARNING_IMPORT, vbOKCancel)
+  Else
+    resp = vbOK
+  End If
+  
+  ' perform the import
+  If resp = vbOK Then
+    ' register the current module in the queue
+    ThisWorkbook.importQueue.Add Me.project.name & IMPORT_DELIMITER & _
+                                 Me.baseObject.name & IMPORT_DELIMITER & _
+                                 Me.path
+    
+    ' schedule the importer to fire after the code runs
+    Application.OnTime Now(), ThisWorkbook.name & "!'importQueuedComponents'"
+  End If
+    
+                  
+errorHandler:
+  'support chaining by returning ME
+  Set reload = Me
+End Function
+
 
 ' ## Private Members
 
