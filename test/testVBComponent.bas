@@ -39,7 +39,7 @@ Public Sub testExportAndReload(component As VBComponent)
   Dim comp As New vbeVBComponent
   Dim fso As New FileSystemObject, txt As TextStream
   
-  comp.baseObject = component
+  Set comp.baseObject = component
     
   comp.export
   

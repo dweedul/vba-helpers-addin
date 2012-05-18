@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'#RelativePath = src
+'#RelativePath = vba
 
 ' This is the base class for the code module manipulations
 
@@ -197,7 +197,7 @@ End Function
 Public Function remove() As vbeVBComponent
   Me.project.VBComponents.remove m_baseObject
   
-  m_baseObject = Nothing
+  Set m_baseObject = Nothing
   
   ' support chaining
   Set remove = Me

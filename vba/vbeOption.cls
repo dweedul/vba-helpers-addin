@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'#RelativePath = src
+'#RelativePath = vba
 
 ' The option is the atomic nugget used in the OptionParser.
 ' This will be where the information about each option is stored.

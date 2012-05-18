@@ -1,5 +1,5 @@
 Attribute VB_Name = "importHelpers"
-'#RelativePath = src
+'#RelativePath = vba
 
 ' The option is the atomic nugget used in the OptionParser.
 ' This will be where the information about each option is stored.
