@@ -11,9 +11,9 @@ Attribute VB_Exposed = False
 
 ' This is the base class for the code module manipulations
 
-'# requires vbeOptionParser
-'# references "Microsoft Visual Basic for Applications Extensibility 5.3"
-'# references "Microsoft Scripting Runtime"
+'! requires vbeOptionParser
+'! references "Microsoft Visual Basic for Applications Extensibility 5.3"
+'! references "Microsoft Scripting Runtime"
 
 Option Explicit
 
@@ -87,7 +87,8 @@ Private Sub Class_Initialize()
   Set m_OptionParser = New vbeOptionParser
   Set fso = New FileSystemObject
   
-  buildOptionSet
+  ' call the public function where the options are defined.
+  Set m_OptionParser = vbeVBComponentOptionParser()
 End Sub
 
 ' ## Public methods
@@ -204,23 +205,6 @@ Public Function remove() As vbeVBComponent
 End Function
 
 ' ## Private Members
-
-' Build the option set for all Components
-Private Sub buildOptionSet()
-  ' add the no-reload option
-  ' this flag, when present, prevents the module from reloading
-  m_OptionParser.addOption "no-reload", typename:="bool", default:=False
-  
-  ' add the no-export option
-  ' this flag, when present, prevents the module from exporting
-  m_OptionParser.addOption "no-export", typename:="bool", default:=False
-  
-  ' add the relative-path string option
-  ' this tells the addin to save the component to / load the component
-  ' from this path, relative to the parent workbook
-  m_OptionParser.addOption "relative-path", typename:="string", default:=""
-End Sub
-
 Private Property Get extension() As String
   Select Case m_baseObject.Type
     Case vbext_ct_ClassModule

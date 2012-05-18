@@ -57,12 +57,12 @@ Private Function testOptionParser()
   Dim testString As String
   Dim o As Object
   
-  testString = "'# boolOption" & vbCrLf & _
+  testString = "'! boolOption" & vbCrLf & _
                "blah bloo blah" & vbCrLf & _
-               "'# strOption ""arg1""    arg2 arg3" & vbCrLf & _
+               "'! strOption ""arg1""    arg2 arg3" & vbCrLf & _
                "hi, i'm football" & vbCrLf & _
-               "'# numOption 10" & vbCrLf & _
-               "'# pathOption ""C:\path to file"""
+               "'! numOption 10" & vbCrLf & _
+               "'! pathOption ""C:\path to file"""
   
   ' set up the option parser
   parser.addOption "boolOption", "bool", False

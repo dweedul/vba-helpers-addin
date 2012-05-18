@@ -12,9 +12,9 @@ Attribute VB_Exposed = False
 ' OptionParsers check a string for specific phrases
 ' and stores them for use later
 
-'# requires vbeOption
-'# references "Microsoft VBScript Regular Expressions 5.5"
-'# references "Microsoft Scripting Runtime"
+'! requires vbeOption
+'! references "Microsoft VBScript Regular Expressions 5.5"
+'! references "Microsoft Scripting Runtime"
 
 Option Explicit
 
@@ -37,7 +37,7 @@ Private Sub Class_Initialize()
   Set m_Options = New Dictionary
   
   ' set defaults, these can be overwritten
-  optionToken = "'#"
+  optionToken = OPTION_TOKEN
 End Sub
 
 ' Add a new option to the hash

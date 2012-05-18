@@ -15,9 +15,9 @@ Four buttons here:
 
 The export and import are controlled by the use of `#commands` in the comments at the top of a code module.
 
-* `#NoExport` - file is not exported. I use this in a lot of quick testing code.
-* `#NoRefresh` - file will not be refreshed, even if the command if given
-* `#RelativePath` - path to save to/load from. This is relative to the current workbook's file location.
+* `no-export` - file is not exported. I use this in a lot of quick testing code.
+* `no-refresh` - file will not be refreshed, even if the command if given
+* `relative-path <path>` - path to save to/load from. This is relative to the current workbook's file location.
 
 ### Copy path the clipboard button
 I forget to open my console into the correct folder so often that copying the path to the clipboard seemed like a good idea.

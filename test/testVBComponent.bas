@@ -1,8 +1,8 @@
 Attribute VB_Name = "testVBComponent"
 '#RelativePath = test
 
-'# no-reload
-'# relative-path test
+'! no-reload
+'! relative-path test
 
 ' These tests will use this code module to test for options.
 ' If the project or module names are changed, the following
@@ -21,7 +21,7 @@ Public Function testVBComponent() As Boolean
   
   ' ## test option parsing
   test = comp.options("no-reload") = True
-  test = test And comp.options("no-export") = True
+  test = test And comp.options("no-export") = False
   test = test And comp.options("relative-path") = "test"
   
   ' ## test properties
@@ -30,8 +30,8 @@ Public Function testVBComponent() As Boolean
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
   
   ' ## test export and import
-  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
-  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
+  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
   
 End Function
 
