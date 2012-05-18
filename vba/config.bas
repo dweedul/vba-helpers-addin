@@ -1,9 +1,11 @@
 Attribute VB_Name = "config"
 '#RelativePath = vba
 
-Option Explicit
-
 ' Configuration for the addin
+
+'! requires vbeOptionParser
+
+Option Explicit
 
 ' Option token - marks the beginning of the option to parse from the modules.
 ' This should be some form of comment to prevent debugging errors.
