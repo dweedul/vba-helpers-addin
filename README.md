@@ -10,6 +10,7 @@ The export and import options are stored in each module. These options start wit
 Current options:
 * `no-export`            - file is not exported. I use this in a lot of quick testing code.
 * `no-reload`            - file will not be reloaded from the file path, even if the command if given
+* `absolute-path <path>` - absolute path to export to/reload from.
 * `relative-path <path>` - path to save to/load from. This is relative to the current workbook's file location.
 
 ## ideas

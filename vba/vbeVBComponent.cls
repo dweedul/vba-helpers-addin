@@ -66,9 +66,19 @@ Public Property Get code() As String
   End With ' CodeModule
 End Property
 
-' Return the filename based on the component type and name
+' Return the filename
 Public Property Get filename()
-  filename = m_baseObject.name & extension
+  
+  ' If the `absolute-path` option is defined,
+  ' use the filename associated with that option.
+  If Len(Me.options("absolute-path")) > 0 Then
+    filename = fso.GetBaseName(Me.options("absolute-path"))
+  
+  ' Otherwise return the <componentName>.<typedExtension>
+  Else
+    filename = m_baseObject.name & extension
+  End If
+  
 End Property
 
 ' Return the options hash
