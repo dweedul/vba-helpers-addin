@@ -1,14 +1,17 @@
 Attribute VB_Name = "importHelpers"
 '#RelativePath = vba
 
-' The option is the atomic nugget used in the OptionParser.
-' This will be where the information about each option is stored.
+' This module contains all the code needed to make an import happen
+' for a given VBComponent.
+
+'! requires vbeVBComponent
+'! references "Microsoft Visual Basic for Applications Extensibility 5.3"
 
 Option Explicit
 
 ' Import a component
 '
-' project        - name of the project
+' project        - name of the project that contains the component
 ' component      - name of the component
 ' path           - file path to the component's file
 ' shouldActivate - should the component be selected afterward
@@ -16,7 +19,7 @@ Option Explicit
 '
 ' Note: This should NEVER be called normally.
 '       It should ALWAYS be scheduled with `Application.OnTime`
-'       The VBE doesn't handle import/exports correctly, otherwise.
+'       The VBE doesn't handle imports correctly, otherwise.
 Public Sub importFromFile( _
              project As String, _
              component As String, _
@@ -70,14 +73,24 @@ Private Function VBComponentExists( _
   
   On Error GoTo errorHandler
   
+  ' If the project reference is missing,
+  ' set it to the current project
   If IsMissing(project) Then
     Set VBProj = ThisWorkbook.VBProject
+    
+  ' If an object was passed, use that object.
   ElseIf typename(project) = "VBProject" Then
     Set VBProj = project
+  
+  ' Otherwise, assume a string and use that.
   Else
     Set VBProj = Application.VBE.VBProjects(project)
+    
   End If
-
+  
+  ' Try to set the temp object to the component
+  ' if there is an error, jump to errorHandler
+  ' and return false. Otherwise, return true.
   Set tmp = VBProj.VBComponents(ModuleName)
   
   VBComponentExists = True

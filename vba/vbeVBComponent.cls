@@ -24,6 +24,17 @@ Private fso As FileSystemObject
 
 Const WARNING_IMPORT As String = "We're going to overwrite something!"
 
+' ## Constructor/Destructor
+
+' Instantiate objects and set defaults
+Private Sub Class_Initialize()
+  Set m_OptionParser = New vbeOptionParser
+  Set fso = New FileSystemObject
+  
+  ' call the public function where the options are defined.
+  Set m_OptionParser = vbeVBComponentOptionParser()
+End Sub
+
 ' ## Properties
 
 ' Get the base component stored in this object.
@@ -34,7 +45,7 @@ Attribute baseObject.VB_UserMemId = 0
   Set baseObject = m_baseObject
 End Property
 
-' Set the base object
+' Store the base object and parse options
 Public Property Set baseObject(baseObject As VBComponent)
   Set m_baseObject = baseObject
   
@@ -67,29 +78,22 @@ Public Property Get options() As Dictionary: Set options = m_OptionParser.option
 Public Property Get path() As String
   Dim basePath As String
   
+  ' use the absolute path, if given
   If Len(Me.options("absolute-path")) > 0 Then
     path = Me.options("absolute-path")
+    
+  ' use the relative path, if given
   Else
     With fso
       basePath = .BuildPath(.GetParentFolderName(project.filename), Me.options("relative-path"))
       path = .BuildPath(basePath, Me.filename)
     End With ' fso
+    
   End If
 End Property
 
 ' Return the module's parent project
 Public Property Get project() As VBProject: Set project = m_baseObject.Collection.Parent: End Property
-
-' ## Constructor/Destructor
-
-' Instantiate objects and set defaults
-Private Sub Class_Initialize()
-  Set m_OptionParser = New vbeOptionParser
-  Set fso = New FileSystemObject
-  
-  ' call the public function where the options are defined.
-  Set m_OptionParser = vbeVBComponentOptionParser()
-End Sub
 
 ' ## Public methods
 
@@ -131,7 +135,7 @@ Public Function export( _
   ' check for existing file and overwrite as required
   If fso.FileExists(Me.path) And Not overwriteExisting Then GoTo errorHandler
   
-  ' Do not export empty components.  That would be silly
+  ' Do not export empty components.  That would be silly.
   If Len(Trim(Me.code)) = 0 Then GoTo errorHandler
   
   ' create the parent folder if it does not exist
@@ -165,7 +169,7 @@ Public Function reload( _
                     
   Dim resp As VbMsgBoxResult
                     
-  ' handle the no-import option
+  ' handle the no-reload option
   If Me.options("no-reload") And Not overrideNoReload Then GoTo errorHandler
   
   ' warn the user before importing
@@ -188,7 +192,7 @@ Public Function reload( _
   End If
                       
 errorHandler:
-  'support chaining by returning ME
+  'support chaining
   Set reload = Me
 End Function
 

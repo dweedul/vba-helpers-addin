@@ -29,6 +29,8 @@ Const cBOOLEAN As String = "bool"
 Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
+' ## Properties
+
 ' Expose the options hash
 Public Property Get options() As Dictionary: Set options = m_Options: End Property
 
@@ -36,9 +38,11 @@ Public Property Get options() As Dictionary: Set options = m_Options: End Proper
 Private Sub Class_Initialize()
   Set m_Options = New Dictionary
   
-  ' set defaults, these can be overwritten
+  ' set default optionToken from the config
   optionToken = OPTION_TOKEN
 End Sub
+
+' ## Public Members
 
 ' Add a new option to the hash
 '
@@ -63,7 +67,7 @@ End Function
 
 ' Parse the given string for lines starting with the optionToken
 '
-' str - the string to parse
+' searchString - the string to parse
 '
 ' Returns the options hash for the given string
 Public Function parse( _
@@ -116,11 +120,13 @@ Public Function parse( _
   Set parse = m_Options
 End Function
 
+' ## Private members
+
 ' Parse the given option line for arguments.
 '
 ' optionLine - the String with the argument information
 '
-' Returns a collection string arguments
+' Returns a collection of string arguments
 Private Function parseArgs( _
                    optionLine As String) _
                    As Variant
@@ -169,7 +175,7 @@ Private Function Submatch(m As Match) As String
   Next ' s
 End Function
 
-' Return a vbeOption item from the dictionary
+' Return a vbeOption item from the dictionary __DEFAULT MEMBER OF THE CLASS__
 '
 ' NOTE: VB_UserMemId = 0 sets this as the default method of the class
 Function Item(key As Variant) As vbeOption

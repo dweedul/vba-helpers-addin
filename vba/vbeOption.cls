@@ -30,6 +30,7 @@ Const cBOOLEAN As String = "bool"
 Const cSTRING As String = "string"
 Const cNUMBER As String = "num"
 
+' ## Constructor
 
 Private Sub Class_Initialize()
   Set m_args = New Collection
@@ -76,11 +77,15 @@ End Property
 ' The name is derived from the optionString.
 Public Property Get name() As String: name = m_name: End Property
 
+' The optionString will be parsed into the command and the expected args.
 Public Property Get optionString() As String: optionString = m_optionString: End Property
 Public Property Let optionString(optionString As String)
   parseOptionString optionString
 End Property
 
+' Typename of the option.
+'
+' Typename must be one of the defined types.  The letter will validate proper type.
 Public Property Get typename() As String: typename = m_typename: End Property
 Public Property Let typename(typename As String)
   Dim tmp As String
@@ -115,6 +120,8 @@ End Property
 
 ' Store the value.
 Public Property Let value(value As Variant): m_value = value: End Property
+
+' ## Private Members
 
 ' Parse the option string for name and expected args
 '
