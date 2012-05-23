@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '#RelativePath = vba
+'! relative-path vba
 
 ' This is the base class for the code module manipulations
 

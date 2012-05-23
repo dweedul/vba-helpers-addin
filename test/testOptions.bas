@@ -1,5 +1,6 @@
 Attribute VB_Name = "testOptions"
 '#RelativePath = test
+'! relative-path vba
 
 Option Explicit
 

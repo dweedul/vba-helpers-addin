@@ -1,5 +1,6 @@
 Attribute VB_Name = "config"
 '#RelativePath = vba
+'! relative-path vba
 
 ' Configuration for the addin
 

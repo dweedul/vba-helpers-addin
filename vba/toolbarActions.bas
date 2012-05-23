@@ -1,5 +1,6 @@
 Attribute VB_Name = "toolbarActions"
 '#RelativePath = vba
+'! relative-path vba
 
 ' Handles commands from the toolbars
 '
