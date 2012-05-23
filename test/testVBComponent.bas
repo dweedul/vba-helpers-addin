@@ -35,7 +35,7 @@ Public Function testVBComponent() As Boolean
   
 End Function
 
-Public Sub testExportAndReload(component As VBComponent)
+Private Sub testExportAndReload(component As VBComponent)
   Dim comp As New vbeVBComponent
   Dim fso As New FileSystemObject, txt As TextStream
   
