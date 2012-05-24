@@ -9,5 +9,6 @@
 
 # ignore test files
 experiment*
+test/dump
 
 # ignore sensitive files
