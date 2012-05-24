@@ -22,17 +22,25 @@ Public Sub toolbarInit()
   
   Set bar = newToolbar(TOOLBAR_NAME)
   
+  
   ' ## Export Menu
   Set menu = addMenu(Parent:=bar, Caption:="Export")
     
   ' export currently selected file
   addButton Parent:=menu, Caption:="Export selected module", OnAction:="ExportSelectedModule"
   
+  ' export the entire project
+  addButton Parent:=menu, Caption:="Export active project", OnAction:="ExportActiveProject"
+  
+  
   ' ## Reload Menu
   Set menu = addMenu(Parent:=bar, Caption:="Reload")
   
   ' reload the currently selected module from the file path
   addButton Parent:=menu, Caption:="Reload selected module", OnAction:="ReloadSelectedModule"
+    
+  ' Reload all modules in the active project
+  addButton Parent:=menu, Caption:="Reload active project", OnAction:="ReloadActiveProject"
     
   ' ## Other Buttons
     
