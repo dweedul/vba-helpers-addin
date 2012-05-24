@@ -1,5 +1,4 @@
 Attribute VB_Name = "toolbarBuilder"
-'#RelativePath = vba
 '! relative-path vba
 
 ' Wrappers for building toolbars

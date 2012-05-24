@@ -7,7 +7,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-'#RelativePath = vba
 '! relative-path vba
 
 ' OptionParsers check a string for specific phrases

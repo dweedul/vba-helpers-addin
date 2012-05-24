@@ -1,5 +1,4 @@
 Attribute VB_Name = "testVBComponent"
-'#RelativePath = test
 '! relative-path test
 
 '! no-reload

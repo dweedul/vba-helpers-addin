@@ -1,5 +1,4 @@
 Attribute VB_Name = "importHelpers"
-'#RelativePath = vba
 '! relative-path vba
 
 ' This module contains all the code needed to make an import happen

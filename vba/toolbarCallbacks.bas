@@ -1,5 +1,4 @@
 Attribute VB_Name = "toolbarCallbacks"
-'#RelativePath = vba
 '! relative-path vba
 
 ' Callbacks from the toolbars
