@@ -173,7 +173,6 @@ End Function
 '
 ' Returns Me for chaining
 Public Function reload( _
-                  Optional warnUser As Boolean = True, _
                   Optional overrideNoReload As Boolean = False, _
                   Optional shouldActivate As Boolean = True) _
                   As vbeVBComponent
@@ -182,26 +181,14 @@ Public Function reload( _
                     
   ' handle the no-reload option
   If Me.options("no-reload") And Not overrideNoReload Then GoTo errorHandler
-  
-  ' warn the user before importing
-  If warnUser Then
-    resp = MsgBox(WARNING_IMPORT, vbOKCancel)
-  Else
-    resp = vbOK
-  End If
-  
-  ' perform the import
-  If resp = vbOK Then
-    
-    ' schedule the import to occur after the current procedure stack completes
-    Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
-                                Me.project.name & """, """ & _
-                                Me.baseObject.name & """, """ & _
-                                Me.path & """, """ & _
-                                shouldActivate & """'"
-                                
-  End If
-                      
+
+  ' schedule the import to occur after the current procedure stack completes
+  Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
+                              Me.project.name & """, """ & _
+                              Me.baseObject.name & """, """ & _
+                              Me.path & """, """ & _
+                              shouldActivate & """'"
+         
 errorHandler:
   'support chaining
   Set reload = Me
