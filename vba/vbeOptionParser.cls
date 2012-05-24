@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '#RelativePath = vba
+'! relative-path vba
 
 ' OptionParsers check a string for specific phrases
 ' and stores them for use later
@@ -39,7 +40,7 @@ Private Sub Class_Initialize()
   Set m_Options = New Dictionary
   
   ' set default optionToken from the config
-  optionToken = OPTION_TOKEN
+  optionToken = "'!"
 End Sub
 
 ' ## Public Members

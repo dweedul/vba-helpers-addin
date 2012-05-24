@@ -1,12 +1,12 @@
 Attribute VB_Name = "testVBComponent"
 '#RelativePath = test
+'! relative-path test
 
 '! no-reload
-'! relative-path test
 
 ' These tests will use this code module to test for options.
 ' If the project or module names are changed, the following
-' constants must be changed for tests to work properly
+' constants must be changed for tests to work properly.
 
 Private Const PROJECT_NAME As String = "VBEHelpersREWRITE"
 Private Const MODULE_NAME As String = "testVBComponent"
@@ -30,12 +30,12 @@ Public Function testVBComponent() As Boolean
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
   
   ' ## test export and import
-  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
-  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
   
 End Function
 
-Public Sub testExportAndReload(component As VBComponent)
+Private Sub testExportAndReload(component As VBComponent)
   Dim comp As New vbeVBComponent
   Dim fso As New FileSystemObject, txt As TextStream
   
@@ -49,5 +49,5 @@ Public Sub testExportAndReload(component As VBComponent)
   txt.Close
   
   ' reload the file
-  comp.reload warnUser:=False, shouldActivate:=True
+  comp.reload shouldActivate:=True
 End Sub

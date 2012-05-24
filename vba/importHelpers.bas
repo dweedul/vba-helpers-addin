@@ -1,5 +1,6 @@
 Attribute VB_Name = "importHelpers"
 '#RelativePath = vba
+'! relative-path vba
 
 ' This module contains all the code needed to make an import happen
 ' for a given VBComponent.
@@ -28,6 +29,13 @@ Public Sub importFromFile( _
   
   Dim p As VBProject:  Set p = Application.VBE.VBProjects(project)
   Dim c As New vbeVBComponent, tmp As New vbeVBComponent
+  Dim fso As New FileSystemObject
+  
+  ' check if the file exists at the indicated path
+  If Not fso.FileExists(path) Then
+    MsgBox "The file was not found at " & vbCrLf & path
+    Exit Sub
+  End If
   
   ' remove the component from the project if it exists
   If VBComponentExists(component, p) Then
