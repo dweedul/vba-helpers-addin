@@ -3,14 +3,29 @@ Attribute VB_Name = "config"
 '! relative-path vba
 
 ' Configuration for the addin
+' Note: Changing anything here requires that the addon be reloaded.
 
 '! requires vbeOptionParser
+'! requires vbeOption
 
 Option Explicit
 
-' Option token - marks the beginning of the option to parse from the modules.
-' This should be some form of comment to prevent debugging errors.
-Public Const OPTION_TOKEN As String = "'!"
+' storage for all the warnings
+Private warnings As Dictionary
+
+
+
+' ## Warning flags
+
+' Throw a warning when a single module will be reloaded.
+Public Const WARN_ON_RELOAD_SINGLE As Boolean = True
+
+' Throw an error when a whole project will be reloaded.
+Public Const WARN_ON_RELOAD_ALL As Boolean = False
+
+
+
+' ## Component Options
 
 ' Set up the options for the the vbeVBComponent Class.
 '
@@ -20,8 +35,9 @@ Public Const OPTION_TOKEN As String = "'!"
 Public Function vbeVBComponentOptionParser() As vbeOptionParser
   Dim optParse As New vbeOptionParser
   
-  ' add the configured option token
-  optParse.optionToken = OPTION_TOKEN
+  ' set the default option token within the vbComponent
+  ' This should be some form of comment to prevent debugging errors.
+  optParse.optionToken = "'!"
   
   ' Add the no-export option.
   ' This flag, when present, prevents the module from exporting.
@@ -42,4 +58,59 @@ Public Function vbeVBComponentOptionParser() As vbeOptionParser
   optParse.addOption "relative-path", typename:="string", default:=""
   
   Set vbeVBComponentOptionParser = optParse
+End Function
+
+
+
+' ## Helper functions for the warnings.
+
+' configure all warnings
+'
+' hideMe - exclude this from the macro window
+Public Sub configWarnings(Optional hideMe As Byte)
+  Dim o As vbeOption
+  
+  ' reset the warnings collection
+  Set warnings = New Dictionary
+  
+  ' sotre the reload-all warning info
+  Set o = New vbeOption
+  o.value = WARN_ON_RELOAD_ALL:  o.args.Add WARNING_OVERWRITE
+  warnings.Add "reload-all", o
+  
+  ' store the reload-one warning info
+  Set o = New vbeOption
+  o.value = WARN_ON_RELOAD_SINGLE:  o.args.Add WARNING_OVERWRITE
+  warnings.Add "reload-one", o
+
+End Sub
+
+' Warn the user about something.
+'
+' prompt - a string warning
+'
+' Returns user's decision. Proceed = true. Defaults to false
+Public Function warnUser(warningName As String) As Boolean
+  Dim resp As VbMsgBoxResult
+  
+  ' default to false
+  warnUser = False
+  
+  ' load the warnings
+  configWarnings
+  
+  With warnings(warningName)
+    If .value Then
+      resp = MsgBox(.args(1), vbOKCancel, "WARNING!!!")
+    Else
+      resp = vbOK
+    End If
+  End With
+  
+  If resp = vbOK Then
+    warnUser = True
+  Else
+    warnUser = False
+  End If
+
 End Function
