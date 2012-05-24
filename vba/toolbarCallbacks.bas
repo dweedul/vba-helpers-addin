@@ -30,11 +30,12 @@ End Sub
 
 ' Exports each module in the current project based on the options specified within each module
 Public Sub ExportActiveProject(barName As String, ctlTag As String)
-  Dim c As New vbeVBComponent, temp As VBComponent, proj As VBProject
+  Dim c As vbeVBComponent, temp As VBComponent, proj As VBProject
   
   ' store the proj so that we don't lose it during debugging
   Set proj = Application.VBE.ActiveVBProject
   For Each temp In proj.VBComponents
+    Set c = New vbeVBComponent
     Set c.baseObject = temp
     c.export
   Next ' component
@@ -52,13 +53,14 @@ End Sub
 
 ' Reload each module in the current project based on the options specified within each module
 Public Sub ReloadActiveProject(barName As String, ctlTag As String)
-  Dim c As New vbeVBComponent, temp As VBComponent, proj As VBProject
+  Dim c As vbeVBComponent, temp As VBComponent, proj As VBProject
   
   If warnUser("reload-all") Then
     ' store the proj so that we don't lose it during debugging
     Set proj = Application.VBE.ActiveVBProject
     
     For Each temp In proj.VBComponents
+      Set c = New vbeVBComponent
       Set c.baseObject = temp
       c.reload
     Next ' component
