@@ -49,5 +49,5 @@ Private Sub testExportAndReload(component As VBComponent)
   txt.Close
   
   ' reload the file
-  comp.reload warnUser:=False, shouldActivate:=True
+  comp.reload shouldActivate:=True
 End Sub
