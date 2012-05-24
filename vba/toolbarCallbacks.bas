@@ -15,6 +15,8 @@ Attribute VB_Name = "toolbarCallbacks"
 '   End Sub
 
 '! requires vbeVBComponent
+'! references "MS Forms 2.0 Object Library"
+'! references "Microsoft Scripting Runtime"
 
 Option Explicit
 
@@ -65,6 +67,16 @@ Public Sub ReloadActiveProject(barName As String, ctlTag As String)
     Next ' component
   End If
   
+End Sub
+
+' Copy the active project's path to the clipboard
+Public Sub CopyPathToClipboard(barName As String, ctlTag As String)
+  Dim DataObj As New MSForms.DataObject, s As String, fso As New FileSystemObject
+  
+  s = fso.GetParentFolderName(Application.VBE.ActiveVBProject.filename)
+  
+  DataObj.SetText s
+  DataObj.PutInClipboard
 End Sub
 
 'Application.SendKeys cmdBar.Text

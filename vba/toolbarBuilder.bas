@@ -45,9 +45,9 @@ Public Sub toolbarInit()
     
   ' Add a button that copies the current project's path to the clipboard
   addButton Parent:=bar, Caption:="Copy file-path to clipboard", _
-            OnAction:="foo", _
+            OnAction:="CopyPathToClipboard", _
             FaceId:=22, Style:=msoButtonIcon, _
-            Tooltip:="Copy the current project's file path to the clipboard."
+            Tooltip:="Copy the active project's file path to the clipboard."
 End Sub
 
 ' Remove the addin's toolbar
