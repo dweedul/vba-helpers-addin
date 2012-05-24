@@ -20,6 +20,9 @@ Public Const OPTION_TOKEN As String = "'!"
 Public Function vbeVBComponentOptionParser() As vbeOptionParser
   Dim optParse As New vbeOptionParser
   
+  ' add the configured option token
+  optParse.optionToken = OPTION_TOKEN
+  
   ' Add the no-export option.
   ' This flag, when present, prevents the module from exporting.
   optParse.addOption "no-export", typename:="bool", default:=False
