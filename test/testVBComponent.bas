@@ -30,8 +30,8 @@ Public Function testVBComponent() As Boolean
   test = test And comp.path = ActiveWorkbook.path & "\test\" & MODULE_NAME & ".bas"
   
   ' ## test export and import
-  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
-  'testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
+  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
   
 End Function
 

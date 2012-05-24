@@ -40,7 +40,7 @@ Private Sub Class_Initialize()
   Set m_Options = New Dictionary
   
   ' set default optionToken from the config
-  optionToken = OPTION_TOKEN
+  optionToken = "'!"
 End Sub
 
 ' ## Public Members
