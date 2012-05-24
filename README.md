@@ -3,9 +3,13 @@ An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
 ## VBE Helpers
 
-### Exporting and Importing Code
+A new toolbar is added to the VB IDE.
 
-The export and import options are stored in each module. These options start with a `'!`.  This can be changed to your liking in the config module.
+### Exporting and Reloading Code
+
+Two menus appear on the toolbar, one for exporting, one for reloading.
+
+The export and reload options are stored within each module. These options start with a `'!`.  This can be changed to your liking in the config module.
 
 Current options:
 * `no-export`            - file is not exported. I use this in a lot of quick testing code.
