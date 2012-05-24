@@ -1,0 +1,20 @@
+<customUI 
+  xmlns="http://schemas.microsoft.com/office/2006/01/customui"
+  onLoad="ribbon_onLoad">
+  <ribbon>
+    <tabs>
+      <tab id="rtabVBAHelperAddin" label="VBA Helper Addin">
+        <group id="rgrpVBHelperAddin" label="My VB Helpers">
+          <button 
+            enabled="true"
+            id="rbtnSelectionTypeName"
+            imageMso="AutoCorrect"
+            size="normal"
+            visible="true"
+            getLabel="rbtnSelectionTypeName_getLabel"
+            onAction="rbtnSelectionTypeName_onAction"/>
+        </group >
+      </tab >
+    </tabs >
+  </ribbon >
+</customUI >
