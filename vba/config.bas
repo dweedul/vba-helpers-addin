@@ -18,10 +18,10 @@ Private warnings As Dictionary
 ' ## Warning flags
 
 ' Throw a warning when a single module will be reloaded.
-Public Const WARN_ON_RELOAD_SINGLE As Boolean = True
+Public Const WARN_ON_RELOAD_SINGLE As Boolean = False
 
 ' Throw an error when a whole project will be reloaded.
-Public Const WARN_ON_RELOAD_ALL As Boolean = False
+Public Const WARN_ON_RELOAD_ALL As Boolean = True
 
 
 

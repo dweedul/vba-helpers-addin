@@ -44,7 +44,7 @@ End Sub
 Public Sub ReloadSelectedModule(barName As String, ctlTag As String)
   Dim c As New vbeVBComponent
   
-  If warnUser("reload-single") Then
+  If warnUser("reload-one") Then
     Set c.baseObject = Application.VBE.SelectedVBComponent
     c.reload
   End If
