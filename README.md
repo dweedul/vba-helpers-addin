@@ -1,4 +1,4 @@
-# VBE Helper Addin
+# VBE Helper Addin v1.0.0
 An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
 ## In the VBE
