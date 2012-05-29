@@ -34,8 +34,13 @@ Const cNUMBER As String = "num"
 ' Expose the options hash
 Public Property Get options() As Dictionary: Set options = m_Options: End Property
 
-' Get the list of options as an array
-Public Property Get optionList() As Variant
+' Get the list of options
+Public Property Get optionList() As Variant: optionList = m_Options.Keys: End Property
+
+' Get the list of optionStrings as an array
+'
+' Return a zero-based array with the optionStrings listed.
+Public Property Get optionStrings() As Variant
   Dim arr As Variant, i As Long
   
   With m_Options

@@ -81,9 +81,11 @@ End Sub
 
 ' Copy the active project's path to the clipboard
 Public Sub PasteCommandString(barName As String, ctlTag As String)
-  Dim txt As String
+  Dim txt As String, parser As vbeOptionParser
   
-  txt = vbeVBComponentOptionParser.optionToken & " " & getControl(barName, ctlTag).Text
+  Set parser = vbeVBComponentOptionParser
+  
+  txt = parser.optionToken & " " & parser(getControl(barName, ctlTag).Text).optionString
   Application.SendKeys txt
 End Sub
 

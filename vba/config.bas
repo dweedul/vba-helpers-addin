@@ -50,11 +50,11 @@ Public Function vbeVBComponentOptionParser() As vbeOptionParser
   ' This sets the path for exporting/reloading.
   ' This will override the normal filename pattern of _<moduleName>.<typedExtension>_
   ' with the contents of the option.
-  optParse.addOption "absolute-path", typename:="string", default:=""
+  optParse.addOption "absolute-path <path>", typename:="string", default:=""
   
   ' Add the relative-path string option.
   ' This sets the path for exporting/reloading relative to the base workbook.
-  optParse.addOption "relative-path", typename:="string", default:=""
+  optParse.addOption "relative-path <path>", typename:="string", default:=""
   
   Set vbeVBComponentOptionParser = optParse
 End Function
