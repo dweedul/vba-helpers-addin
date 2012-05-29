@@ -79,4 +79,24 @@ Public Sub CopyPathToClipboard(barName As String, ctlTag As String)
   DataObj.PutInClipboard
 End Sub
 
-'Application.SendKeys cmdBar.Text
+' Copy the active project's path to the clipboard
+Public Sub PasteCommandString(barName As String, ctlTag As String)
+  Dim txt As String
+  
+  txt = vbeVBComponentOptionParser.optionToken & " " & getControl(barName, ctlTag).Text
+  Application.SendKeys txt
+End Sub
+
+
+' ## Command bar helpers
+
+' Get the control given the barName and tag
+'
+' barName - the control's parent bar
+' ctlTag  - the tag for the control
+'
+' Return the control.
+Private Function getControl(barName As String, ctlTag As String) As CommandBarControl
+  Set getControl = Application.VBE.CommandBars(barName).FindControl(Tag:=ctlTag)
+End Function
+
