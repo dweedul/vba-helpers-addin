@@ -3,6 +3,8 @@ Attribute VB_Name = "ribbon"
 
 ' Ribbon callbacks and helper functions
 
+'! requires globalsHelpers.bas
+
 Option Explicit
 
 Public ribbon As IRibbonUI
@@ -11,6 +13,7 @@ Public ribbon As IRibbonUI
 
 Public Sub ribbon_onLoad(ribbon As IRibbonUI)
   Set ribbon = ribbon
+  saveGlobal ribbon, "ribbon"
 End Sub
 
 ' ## Selection type name button callbacks
@@ -44,9 +47,13 @@ Private Function reloadRibbonControl( _
                   As IRibbonControl
   On Error GoTo errorHandler
   
-  If Not ribbon Is Nothing Then
-    ribbon.InvalidateControl Control.ID
+  ' get the ribbon
+  If ribbon Is Nothing Then
+    Set ribbon = GetGlobal("ribbon")
   End If
+  
+  ' invalidate the control
+  ribbon.InvalidateControl Control.ID
   
 errorHandler:
   ' support chaining
