@@ -79,7 +79,7 @@ Private Function newToolbar( _
     .Position = msoBarTop
     .Visible = True
   End With
-                    
+
 errorHandler:
   ' support chaining
   Set newToolbar = bar

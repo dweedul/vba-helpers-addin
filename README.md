@@ -1,7 +1,7 @@
 # VBE Helper Addin
 An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
-## VBE Helpers
+## In the VBE
 
 A new toolbar is added to the VB IDE.
 
@@ -16,6 +16,13 @@ Current options:
 * `no-reload`            - file will not be reloaded from the file path, even if the command if given
 * `absolute-path <path>` - absolute path to export to/reload from.
 * `relative-path <path>` - path to save to/load from. This is relative to the current workbook's file location.
+
+## In the Main Excel Window
+
+A new ribbon tab appears!
+
+### Type name of selection button.
+This button will reflect the typename of the selected object.  Clicking the button refreshes the target.
 
 ## ideas
 * multiline option parsing: for documentation, etc
