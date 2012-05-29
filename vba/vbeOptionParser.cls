@@ -34,6 +34,11 @@ Const cNUMBER As String = "num"
 ' Expose the options hash
 Public Property Get options() As Dictionary: Set options = m_Options: End Property
 
+' Get the list of options as an array
+Public Property Get optionList() As Variant: optionList = m_Options.Keys: End Property
+
+' ## Contructor/Destructor
+
 ' Set defaults
 Private Sub Class_Initialize()
   Set m_Options = New Dictionary

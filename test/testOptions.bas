@@ -79,5 +79,7 @@ Private Function testOptionParser()
   test = test And options("numOption") = 10
   test = test And options("pathOption") = "C:\path to file"
   
+  test = test And assertArraysEqual(parser.optionList, Array("boolOption", "strOption", "numOption", "pathOption"))
+  
   testOptionParser = test
 End Function
