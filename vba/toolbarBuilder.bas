@@ -16,7 +16,9 @@ Private Const TOOLBAR_NAME As String = "vba-helper"
 ' ## Public methods to initialize and destroy the toolbar
 
 ' Create the toolbar for the add in
-Public Sub toolbarInit()
+'
+' hideMe - dummy variable to hide this sub from the macroMenu
+Public Sub toolbarInit(Optional hideMe As Byte)
   Dim bar As CommandBar, menu As CommandBarPopup
   
   Set bar = newToolbar(TOOLBAR_NAME)
@@ -59,7 +61,9 @@ Public Sub toolbarInit()
 End Sub
 
 ' Remove the addin's toolbar
-Public Sub toolbarDestroy()
+'
+' hideMe - dummy variable to hide this sub from the macroMenu
+Public Sub toolbarDestroy(Optional hideMe As Byte)
   removeToolbar TOOLBAR_NAME
 End Sub
 
