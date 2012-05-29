@@ -22,7 +22,7 @@ Current options:
 A new ribbon tab appears!
 
 ### Type name of selection button.
-This button will reflect the typename of the selected object.
+This button will reflect the typename of the selected object.  Clicking the button refreshes the target.
 
 ## ideas
 * multiline option parsing: for documentation, etc
