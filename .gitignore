@@ -8,7 +8,7 @@
 *.xla*
 
 # ignore test files
-test*
 experiment*
+test/dump
 
 # ignore sensitive files
