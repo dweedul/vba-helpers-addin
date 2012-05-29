@@ -80,6 +80,7 @@ Public Property Get name() As String: name = m_name: End Property
 ' The optionString will be parsed into the command and the expected args.
 Public Property Get optionString() As String: optionString = m_optionString: End Property
 Public Property Let optionString(optionString As String)
+  m_optionString = optionString
   parseOptionString optionString
 End Property
 
