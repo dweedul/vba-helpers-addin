@@ -35,7 +35,21 @@ Const cNUMBER As String = "num"
 Public Property Get options() As Dictionary: Set options = m_Options: End Property
 
 ' Get the list of options as an array
-Public Property Get optionList() As Variant: optionList = m_Options.Keys: End Property
+Public Property Get optionList() As Variant
+  Dim arr As Variant, i As Long
+  
+  With m_Options
+    ' fill the temp array with the optionStrings
+    ReDim arr(0 To .Count - 1)
+    
+    For i = 0 To .Count - 1
+      arr(i) = .Items(i).optionString
+    Next ' i
+  End With ' m_Options
+  
+  optionList = arr
+End Property
+
 
 ' ## Contructor/Destructor
 
