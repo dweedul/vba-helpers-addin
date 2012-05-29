@@ -72,7 +72,7 @@ Public Sub configWarnings(Optional hideMe As Byte)
   ' reset the warnings collection
   Set warnings = New Dictionary
   
-  ' sotre the reload-all warning info
+  ' store the reload-all warning info
   Set o = New vbeOption
   o.value = WARN_ON_RELOAD_ALL:  o.args.Add WARNING_OVERWRITE
   warnings.Add "reload-all", o
