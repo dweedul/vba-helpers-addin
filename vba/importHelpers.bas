@@ -157,7 +157,6 @@ errorHandler:
   pickFolder = fol
 End Function
 
-
 ' Check the extension is valid
 Private Function isValidExtension( _
                    ext As String) _
