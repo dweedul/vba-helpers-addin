@@ -22,6 +22,9 @@ Public Const WARN_ON_RELOAD_SINGLE As Boolean = False
 ' Throw an error when a whole project will be reloaded.
 Public Const WARN_ON_RELOAD_ALL As Boolean = True
 
+' Throw an error when the project is cleared
+Public Const WARN_ON_CLEAR_ALL As Boolean = True
+
 
 
 ' ## Component Options
@@ -81,7 +84,11 @@ Public Sub configWarnings(Optional hideMe As Byte)
   Set o = New vbeOption
   o.value = WARN_ON_RELOAD_SINGLE:  o.args.Add WARNING_OVERWRITE
   warnings.Add "reload-one", o
-
+  
+  ' store the clear warning info
+  Set o = New vbeOption
+  o.value = WARN_ON_CLEAR_ALL:  o.args.Add WARNING_CLEAR_ALL
+  warnings.Add "clear-all", o
 End Sub
 
 ' Warn the user about something.

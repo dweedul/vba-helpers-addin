@@ -35,13 +35,18 @@ Public Sub toolbarInit(Optional hideMe As Byte)
   
   
   ' ## Reload Menu
-  Set menu = addMenu(Parent:=bar, Caption:="Reload")
+  Set menu = addMenu(Parent:=bar, Caption:="Reload/Import")
   
   ' reload the currently selected module from the file path
   addButton Parent:=menu, Caption:="Reload selected module", OnAction:="ReloadSelectedModule"
     
   ' Reload all modules in the active project
   addButton Parent:=menu, Caption:="Reload active project", OnAction:="ReloadActiveProject"
+    
+  ' Import all files from a given folder
+  addButton Parent:=menu, Caption:="Import folder", OnAction:="ImportFolderToActiveProject"
+  
+  
     
   ' ## Other Buttons
     
@@ -57,6 +62,12 @@ Public Sub toolbarInit(Optional hideMe As Byte)
               BeginGroup:=True, _
               Tooltip:="List of available command strings", _
               Tag:="commandDropdown"
+            
+  
+  ' ## Dangerous tools
+  Set menu = addMenu(Parent:=bar, Caption:="0X")
+  
+  addButton Parent:=menu, Caption:="Clear all code", OnAction:="ClearAllFromActiveProject"
             
 End Sub
 
