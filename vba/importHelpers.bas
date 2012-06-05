@@ -108,4 +108,26 @@ errorHandler:
   VBComponentExists = False
 End Function
 
+' Get a folder from a file dialog
+'
+' path - the path to start from
+'
+' Returns the selected folder path.
+Private Function pickFolder( _
+                   path As String) _
+                   As String
+  Dim fol As String
+    
+  With Application.FileDialog(msoFileDialogFolderPicker)
+    .Title = MESSAGE_FOLDER_SELECT
+    .AllowMultiSelect = False
+    .InitialFileName = path
+    If .Show <> -1 Then GoTo errorHandler
+    fol = .SelectedItems(1)
+  End With ' folderPicker
+
+errorHandler:
+  pickFolder = fol
+End Function
+
 
