@@ -70,16 +70,23 @@ End Sub
 Public Function importFromFolder( _
                   vbProj As VBProject) _
                   As VBProject
-  Dim path As String, fso As FileSystemObject, f As File
+  Dim path As String, fso As New FileSystemObject, f As File
   
   If Len(vbProj.filename) = 0 Then
     path = pickFolder("%DESKTOP%")
   Else
-    path = pickFolder(vbProj.filename)
+    path = pickFolder(fso.GetParentFolderName(vbProj.filename))
   End If
   
+  ' Validate the file, then import
   For Each f In fso.getFolder(path).Files
-    
+    If isValidExtension(fso.GetExtensionName(f.path)) Then
+      Debug.Print fso.GetBaseName(f.path)
+    Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
+                              vbProj.name & """, """ & _
+                              fso.GetBaseName(f.path) & """, """ & _
+                              f.path & """'"
+    End If
   Next ' f
   
 End Function
@@ -150,4 +157,11 @@ errorHandler:
   pickFolder = fol
 End Function
 
+
+' Check the extension is valid
+Private Function isValidExtension( _
+                   ext As String) _
+                   As Boolean
+  If ext = "bas" Or ext = "cls" Or ext = "frm" Then isValidExtension = True
+End Function
 
