@@ -77,7 +77,6 @@ Public Sub ImportFolderToActiveProject(barName As String, ctlTag As String)
     'store the project
     Set proj = Application.VBE.ActiveVBProject
     
-    clearVBProject proj
     importFromFolder proj
   End If
 End Sub
@@ -102,6 +101,17 @@ Public Sub PasteCommandString(barName As String, ctlTag As String)
   Application.SendKeys txt
 End Sub
 
+' Import code into the active VB project from a folder of the user's choosing.
+Public Sub ClearAllFromActiveProject(barName As String, ctlTag As String)
+  Dim proj As VBProject
+  
+  If warnUser("clear-all") Then
+    'store the project
+    Set proj = Application.VBE.ActiveVBProject
+    
+    clearVBProject proj
+  End If
+End Sub
 
 ' ## Command bar helpers
 

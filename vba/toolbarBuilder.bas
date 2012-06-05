@@ -45,7 +45,8 @@ Public Sub toolbarInit(Optional hideMe As Byte)
     
   ' Import all files from a given folder
   addButton Parent:=menu, Caption:="Import folder", OnAction:="ImportFolderToActiveProject"
-    
+  
+  
     
   ' ## Other Buttons
     
@@ -61,6 +62,12 @@ Public Sub toolbarInit(Optional hideMe As Byte)
               BeginGroup:=True, _
               Tooltip:="List of available command strings", _
               Tag:="commandDropdown"
+            
+  
+  ' ## Dangerous tools
+  Set menu = addMenu(Parent:=bar, Caption:="0X")
+  
+  addButton Parent:=menu, Caption:="Clear all code", OnAction:="ClearAllFromActiveProject"
             
 End Sub
 

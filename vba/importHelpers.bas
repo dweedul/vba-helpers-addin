@@ -10,6 +10,7 @@ Attribute VB_Name = "importHelpers"
 Option Explicit
 
 ' Import a component
+' Overwrites existing components and imports new ones.
 '
 ' project        - name of the project that contains the component
 ' component      - name of the component
@@ -81,7 +82,6 @@ Public Function importFromFolder( _
   ' Validate the file, then import
   For Each f In fso.getFolder(path).Files
     If isValidExtension(fso.GetExtensionName(f.path)) Then
-      Debug.Print fso.GetBaseName(f.path)
     Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
                               vbProj.name & """, """ & _
                               fso.GetBaseName(f.path) & """, """ & _
