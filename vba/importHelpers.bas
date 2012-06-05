@@ -64,6 +64,26 @@ Public Sub importFromFile( _
   If shouldActivate Then c.activate
 End Sub
 
+' Import a folder of code into a VBProject.
+'
+' Returns the target project.
+Public Function importFromFolder( _
+                  vbProj As VBProject) _
+                  As VBProject
+  Dim path As String, fso As FileSystemObject, f As File
+  
+  If Len(vbProj.filename) = 0 Then
+    path = pickFolder("%DESKTOP%")
+  Else
+    path = pickFolder(vbProj.filename)
+  End If
+  
+  For Each f In fso.getFolder(path).Files
+    
+  Next ' f
+  
+End Function
+
 ' Check for the existence of a vbcomponent
 '
 ' component - name of the component
@@ -76,29 +96,29 @@ Private Function VBComponentExists( _
                   Optional project As Variant) _
                   As Boolean
   
-  Dim tmp As Variant, VBProj As Object
+  Dim tmp As Variant, vbProj As Object
   
   On Error GoTo errorHandler
   
   ' If the project reference is missing,
   ' set it to the current project
   If IsMissing(project) Then
-    Set VBProj = ThisWorkbook.VBProject
+    Set vbProj = ThisWorkbook.VBProject
     
   ' If an object was passed, use that object.
   ElseIf typename(project) = "VBProject" Then
-    Set VBProj = project
+    Set vbProj = project
   
   ' Otherwise, assume a string and use that.
   Else
-    Set VBProj = Application.VBE.VBProjects(project)
+    Set vbProj = Application.VBE.VBProjects(project)
     
   End If
   
   ' Try to set the temp object to the component
   ' if there is an error, jump to errorHandler
   ' and return false. Otherwise, return true.
-  Set tmp = VBProj.VBComponents(ModuleName)
+  Set tmp = vbProj.VBComponents(ModuleName)
   
   VBComponentExists = True
   On Error GoTo 0
@@ -119,7 +139,7 @@ Private Function pickFolder( _
   Dim fol As String
     
   With Application.FileDialog(msoFileDialogFolderPicker)
-    .Title = MESSAGE_FOLDER_SELECT
+    .Title = "Select a folder"
     .AllowMultiSelect = False
     .InitialFileName = path
     If .Show <> -1 Then GoTo errorHandler

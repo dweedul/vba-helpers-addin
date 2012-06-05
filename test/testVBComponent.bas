@@ -50,3 +50,7 @@ Private Sub testExportAndReload(component As VBComponent)
   ' reload the file
   comp.reload shouldActivate:=True
 End Sub
+
+Private Sub testReloadFromFolder()
+  importFromFolder Application.VBE.VBProjects("testProject")
+End Sub
