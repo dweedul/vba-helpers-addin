@@ -65,7 +65,7 @@ Public Sub toolbarInit(Optional hideMe As Byte)
             
   
   ' ## Dangerous tools
-  Set menu = addMenu(Parent:=bar, Caption:="0X")
+  Set menu = addMenu(Parent:=bar, Caption:="OX")
   
   addButton Parent:=menu, Caption:="Clear all code", OnAction:="ClearAllFromActiveProject"
             
