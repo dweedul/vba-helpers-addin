@@ -1,4 +1,4 @@
-# VBE Helper Addin v2.0.0
+# VBE Helper Addin v2.0.1
 An addin for Excel 2007+ that does some nifty stuff in the code editor.
 
 ## In the VBE
@@ -32,11 +32,7 @@ __Clear all code__ will clear the selected project of all code.
 
 ## In the Main Excel Window
 
-A new ribbon tab appears!
+A new control appears on the Developer tab!
 
 ### Type name of selection button.
 This button will reflect the typename of the selected object.  Clicking the button refreshes the target.
-
-## ideas
-* multiline option parsing: for documentation, etc
-* array options: for references and requires
