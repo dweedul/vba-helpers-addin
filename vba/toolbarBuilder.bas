@@ -11,12 +11,14 @@ Option Explicit
 ' stores the toolbarEvents
 Private eventStore As New Collection
 
-Private Const TOOLBAR_NAME As String = "vba-helper"
+Private Const TOOLBAR_NAME As String = "vba-helper-dev"
 
 ' ## Public methods to initialize and destroy the toolbar
 
 ' Create the toolbar for the add in
-Public Sub toolbarInit()
+'
+' hideMe - dummy variable to hide this sub from the macroMenu
+Public Sub toolbarInit(Optional hideMe As Byte)
   Dim bar As CommandBar, menu As CommandBarPopup
   
   Set bar = newToolbar(TOOLBAR_NAME)
@@ -33,13 +35,18 @@ Public Sub toolbarInit()
   
   
   ' ## Reload Menu
-  Set menu = addMenu(Parent:=bar, Caption:="Reload")
+  Set menu = addMenu(Parent:=bar, Caption:="Reload/Import")
   
   ' reload the currently selected module from the file path
   addButton Parent:=menu, Caption:="Reload selected module", OnAction:="ReloadSelectedModule"
     
   ' Reload all modules in the active project
   addButton Parent:=menu, Caption:="Reload active project", OnAction:="ReloadActiveProject"
+    
+  ' Import all files from a given folder
+  addButton Parent:=menu, Caption:="Import folder", OnAction:="ImportFolderToActiveProject"
+  
+  
     
   ' ## Other Buttons
     
@@ -48,10 +55,26 @@ Public Sub toolbarInit()
             OnAction:="CopyPathToClipboard", _
             FaceId:=22, Style:=msoButtonIcon, _
             Tooltip:="Copy the active project's file path to the clipboard."
+            
+  ' Add a dropdown with all the options defined in the config
+  addDropdown Parent:=bar, List:=vbeVBComponentOptionParser().optionList, _
+              OnAction:="PasteCommandString", _
+              BeginGroup:=True, _
+              Tooltip:="List of available command strings", _
+              Tag:="commandDropdown"
+            
+  
+  ' ## Dangerous tools
+  Set menu = addMenu(Parent:=bar, Caption:="OX")
+  
+  addButton Parent:=menu, Caption:="Clear all code", OnAction:="ClearAllFromActiveProject"
+            
 End Sub
 
 ' Remove the addin's toolbar
-Public Sub toolbarDestroy()
+'
+' hideMe - dummy variable to hide this sub from the macroMenu
+Public Sub toolbarDestroy(Optional hideMe As Byte)
   removeToolbar TOOLBAR_NAME
 End Sub
 
@@ -127,6 +150,46 @@ Private Function addButton( _
 errorHandler:
   ' support chaining
   Set addButton = btn
+End Function
+
+' Add a dropdown to the parent
+'
+' Parent     - container for the control
+' List       - an array of strings to add to the combobox
+' OnAction   - the command to call when the button is pressed
+' BeginGroup - put a separator in front of the button
+' Tooltip    - help text
+' Tag        - the tag for the control.  Identifies the tag in a callback.
+'
+' Returns the dropdown object.
+Private Function addDropdown( _
+                   Parent As Object, _
+                   List As Variant, _
+                   OnAction As String, _
+                   Optional BeginGroup As Boolean = False, _
+                   Optional Tooltip As String = vbNullString, _
+                   Optional Tag As String = vbNullString) _
+                   As CommandBarComboBox
+  
+  Dim cbo As CommandBarComboBox, i As Long
+  
+  Set cbo = addItem(Parent, vbNullString, OnAction, msoControlComboBox)
+  
+  With cbo
+    .BeginGroup = BeginGroup
+    .TooltipText = Tooltip
+    .Tag = Tag
+    
+    ' Add the items from the list to the dropdown.
+    For i = LBound(List) To UBound(List)
+      .addItem List(i)
+    Next ' i
+    
+  End With ' cbo
+  
+errorHandler:
+  ' support chaining
+  Set addDropdown = cbo
 End Function
 
 ' Add a menu to the parent

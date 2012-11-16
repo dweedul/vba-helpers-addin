@@ -10,6 +10,7 @@ Attribute VB_Name = "importHelpers"
 Option Explicit
 
 ' Import a component
+' Overwrites existing components and imports new ones.
 '
 ' project        - name of the project that contains the component
 ' component      - name of the component
@@ -64,6 +65,32 @@ Public Sub importFromFile( _
   If shouldActivate Then c.activate
 End Sub
 
+' Import a folder of code into a VBProject.
+'
+' Returns the target project.
+Public Function importFromFolder( _
+                  vbProj As VBProject) _
+                  As VBProject
+  Dim path As String, fso As New FileSystemObject, f As File
+  
+  If Len(vbProj.filename) = 0 Then
+    path = pickFolder("%DESKTOP%")
+  Else
+    path = pickFolder(fso.GetParentFolderName(vbProj.filename))
+  End If
+  
+  ' Validate the file, then import
+  For Each f In fso.getFolder(path).Files
+    If isValidExtension(fso.GetExtensionName(f.path)) Then
+    Application.OnTime Now(), ThisWorkbook.name & "!'importFromFile """ & _
+                              vbProj.name & """, """ & _
+                              fso.GetBaseName(f.path) & """, """ & _
+                              f.path & """'"
+    End If
+  Next ' f
+  
+End Function
+
 ' Check for the existence of a vbcomponent
 '
 ' component - name of the component
@@ -76,29 +103,29 @@ Private Function VBComponentExists( _
                   Optional project As Variant) _
                   As Boolean
   
-  Dim tmp As Variant, VBProj As Object
+  Dim tmp As Variant, vbProj As Object
   
   On Error GoTo errorHandler
   
   ' If the project reference is missing,
   ' set it to the current project
   If IsMissing(project) Then
-    Set VBProj = ThisWorkbook.VBProject
+    Set vbProj = ThisWorkbook.VBProject
     
   ' If an object was passed, use that object.
   ElseIf typename(project) = "VBProject" Then
-    Set VBProj = project
+    Set vbProj = project
   
   ' Otherwise, assume a string and use that.
   Else
-    Set VBProj = Application.VBE.VBProjects(project)
+    Set vbProj = Application.VBE.VBProjects(project)
     
   End If
   
   ' Try to set the temp object to the component
   ' if there is an error, jump to errorHandler
   ' and return false. Otherwise, return true.
-  Set tmp = VBProj.VBComponents(ModuleName)
+  Set tmp = vbProj.VBComponents(ModuleName)
   
   VBComponentExists = True
   On Error GoTo 0
@@ -108,4 +135,32 @@ errorHandler:
   VBComponentExists = False
 End Function
 
+' Get a folder from a file dialog
+'
+' path - the path to start from
+'
+' Returns the selected folder path.
+Private Function pickFolder( _
+                   path As String) _
+                   As String
+  Dim fol As String
+    
+  With Application.FileDialog(msoFileDialogFolderPicker)
+    .Title = "Select a folder"
+    .AllowMultiSelect = False
+    .InitialFileName = path
+    If .Show <> -1 Then GoTo errorHandler
+    fol = .SelectedItems(1)
+  End With ' folderPicker
+
+errorHandler:
+  pickFolder = fol
+End Function
+
+' Check the extension is valid
+Private Function isValidExtension( _
+                   ext As String) _
+                   As Boolean
+  If ext = "bas" Or ext = "cls" Or ext = "frm" Then isValidExtension = True
+End Function
 

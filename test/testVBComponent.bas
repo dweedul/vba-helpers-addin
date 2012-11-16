@@ -7,7 +7,7 @@ Attribute VB_Name = "testVBComponent"
 ' If the project or module names are changed, the following
 ' constants must be changed for tests to work properly.
 
-Private Const PROJECT_NAME As String = "VBEHelpersREWRITE"
+Private Const PROJECT_NAME As String = "vba_helpers"
 Private Const MODULE_NAME As String = "testVBComponent"
 
 Option Explicit
@@ -30,7 +30,6 @@ Public Function testVBComponent() As Boolean
   
   ' ## test export and import
   testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testExportReload")
-  testExportAndReload Application.VBE.VBProjects("testProject").VBComponents("testSheet")
   
 End Function
 
@@ -49,4 +48,8 @@ Private Sub testExportAndReload(component As VBComponent)
   
   ' reload the file
   comp.reload shouldActivate:=True
+End Sub
+
+Public Sub testReloadFromFolder()
+  importFromFolder Application.VBE.VBProjects("testProject")
 End Sub
