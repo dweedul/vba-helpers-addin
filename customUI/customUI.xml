@@ -3,8 +3,8 @@
   onLoad="ribbon_onLoad">
   <ribbon>
     <tabs>
-      <tab id="rtabVBAHelperAddin" label="VBA Helper Addin">
-        <group id="rgrpVBHelperAddin" label="My VB Helpers">
+      <tab idMso="TabDeveloper">
+        <group id="rgrpVBHelperAddin" label="VB Helpers">
           <button 
             enabled="true"
             id="rbtnSelectionTypeName"
