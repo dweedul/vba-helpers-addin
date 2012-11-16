@@ -11,7 +11,7 @@ Option Explicit
 ' stores the toolbarEvents
 Private eventStore As New Collection
 
-Private Const TOOLBAR_NAME As String = "vba-helper"
+Private Const TOOLBAR_NAME As String = "vba-helper-dev"
 
 ' ## Public methods to initialize and destroy the toolbar
 
